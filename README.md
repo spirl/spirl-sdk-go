@@ -1,4 +1,4 @@
-[![GoDoc](https://pkg.dev.org/github.com/spirl/spirl-sdk-go?status.svg)](https://pkg.dev.org/github.com/spirl/spirl-sdk-go)
+[![GoDoc](https://pkg.go.dev/github.com/spirl/spirl-sdk-go?status.svg)](https://pkg.go.dev/github.com/spirl/spirl-sdk-go)
 
 # SPIRL Go SDK
 
