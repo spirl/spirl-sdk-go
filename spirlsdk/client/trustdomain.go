@@ -85,6 +85,7 @@ func (a trustDomainAPI) TrustDomainInfo(ctx context.Context, params trustdomains
 
 func (a trustDomainAPI) ListTrustDomains(ctx context.Context, params trustdomainsdk.ListTrustDomainsParams) (*trustdomainsdk.ListTrustDomainsResult, error) {
 	req := &trustdomainapi.ListTrustDomainsRequest{
+		ExcludeStats:       params.View.ExcludeStats,
 		IncludeDynamicData: params.View.IncludeStatus,
 		TrustDomainName:    optionalValue(params.Filter.Name),
 	}
@@ -253,6 +254,11 @@ func trustDomainFromAPI(api *trustdomainapi.TrustDomain, includeStatus bool) (tr
 			ClustersActive:        api.ClustersActive,
 			FederationLinksTotal:  api.FederationLinksTotal,
 			FederationLinksActive: api.FederationLinksActive,
+			WorkloadsActive:       api.WorkloadsActive,
+			WorkloadsTotal:        api.WorkloadsTotal,
+			CredentialsActive:     api.CredentialsActive,
+			CredentialsTotal:      api.CredentialsTotal,
+			LastExpiryIn:          api.LastExpiryIn.AsDuration(),
 		}
 	}
 	return out, nil

@@ -126,7 +126,7 @@ func (d *dialer) proxyDial(ctx context.Context, network string, address string) 
 	}
 
 	conn := tls.Client(rawConn, config)
-	err = conn.Handshake()
+	err = conn.HandshakeContext(ctx)
 	if err != nil {
 		rawConn.Close()
 		return nil, err

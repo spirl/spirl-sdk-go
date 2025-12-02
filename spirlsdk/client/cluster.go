@@ -34,9 +34,14 @@ func (a clusterAPI) CreateCluster(ctx context.Context, params clustersdk.CreateC
 		},
 		Description:                 optionalValue(params.Description),
 		PathTemplate:                optionalValue(params.PathTemplate),
-		CicdProfileName:             optionalValue(params.CICDProfileName),
 		X509CustomizationTemplate:   optionalValue(params.X509CustomizationTemplate),
+		JwtCustomizationTemplate:    optionalValue(params.JWTCustomizationTemplate),
 		ProviderAttestationConfigId: optionalValue(params.ProviderAttestationConfigID),
+		AgentAttestationConfigId:    optionalValue(params.AgentAttestationConfigID),
+		CicdProfileName:             "", // Deprecated and ignored
+		ReflectorEnabled:            nil,
+		ReflectorPubKey:             nil,
+		RealmId:                     optionalValue(params.RealmID),
 	}
 
 	resp, err := a.client.CreateCluster(ctx, req)
@@ -59,6 +64,7 @@ func (a clusterAPI) ListClusters(ctx context.Context, params clustersdk.ListClus
 	req := &clusterapi.ListClustersRequest{
 		TrustDomainId: optionalValue(params.Filter.TrustDomainID),
 		ClusterName:   optionalValue(params.Filter.Name),
+		RealmId:       optionalValue(params.Filter.RealmID),
 	}
 
 	resp, err := a.client.ListClusters(ctx, req)
@@ -94,7 +100,11 @@ func (a clusterAPI) NewClusterVersion(ctx context.Context, params clustersdk.New
 		},
 		PathTemplate:                optionalValue(params.PathTemplate),
 		X509CustomizationTemplate:   optionalValue1(params.X509CustomizationTemplate, ptrOf),
+		JwtCustomizationTemplate:    optionalValue1(params.JWTCustomizationTemplate, ptrOf),
 		ProviderAttestationConfigId: optionalValue1(params.ProviderAttestationConfigID, ptrOf),
+		AgentAttestationConfigId:    optionalValue1(params.AgentAttestationConfigID, ptrOf),
+		ReflectorEnabled:            nil,
+		ReflectorPubKey:             nil,
 	}
 
 	resp, err := a.client.NewClusterVersion(ctx, req)
@@ -217,9 +227,8 @@ func clusterFromAPI(cluster *clusterapi.Cluster) clustersdk.Cluster {
 		OrgID:                       cluster.OrgId,
 		TrustDomainID:               cluster.TrustDomainId,
 		TrustDomainName:             cluster.TrustDomainName,
-		CICDProfileID:               cluster.CiCdProfileId,
-		CICDProfileName:             cluster.CiCdProfileName,
 		X509CustomizationTemplate:   cluster.X509CustomizationTemplate,
+		JWTCustomizationTemplate:    cluster.JwtCustomizationTemplate,
 	}
 }
 
@@ -241,6 +250,7 @@ func clusterVersionFromAPI(in *clusterapi.ClusterVersion) (clustersdk.ClusterVer
 		Active:                        in.Active,
 		PathTemplate:                  in.PathTemplate,
 		X509CustomizationTemplate:     in.X509CustomizationTemplate,
+		JWTCustomizationTemplate:      in.JwtCustomizationTemplate,
 		ProviderAttestationConfigName: in.ProviderAttestationConfigName,
 		EstimatedLastUsed:             in.EstimatedLastUsed.AsTime(),
 		NumActiveAgents:               in.NumActiveAgents,

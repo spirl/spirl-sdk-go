@@ -63,11 +63,6 @@ type CreateClusterParams struct {
 	// Optional.
 	PathTemplate *string
 
-	// CICDProfileName identifies the CICD profile to use with the cluster. See
-	// the CICD API for more information on CICD profiles. This field is
-	// ignored for cluster platforms other than Linux clusters. Optional.
-	CICDProfileName *string
-
 	// X509CustomizationTemplate customizes X509-SVIDs issued by this cluster.
 	// Optional.
 	X509CustomizationTemplate *string
@@ -75,6 +70,19 @@ type CreateClusterParams struct {
 	// ProviderAttestationConfigID identifies the provider attestation to
 	// use with this cluster.
 	ProviderAttestationConfigID *string
+
+	// JWTCustomizationTemplate is the JWT customization template that cann define
+	// additional JWT claims that will be added to JWT-SVIDs issued by this
+	// cluster.
+	// Optional.
+	JWTCustomizationTemplate *string
+
+	// RealmID identifies the realm the new cluster will belong to.
+	// Optional.
+	RealmID *string
+
+	// AgentAttestationConfigID identifies the agent attestation config to use with this cluster.
+	AgentAttestationConfigID *string
 }
 
 type CreateClusterResult struct {
@@ -134,6 +142,16 @@ type NewClusterVersionParams struct {
 	// configuration to use with this cluster.
 	// Optional.
 	ProviderAttestationConfigID *string
+
+	// Optional. JWT customization template for the cluster.
+	// The template includes user-defined claim names where the values must be
+	// attributes emitted by the cluster.
+	// Example: namespace={{kubernetes.pod.namespace}},pod_service_account={{kubernetes.pod.service_account}}
+	JWTCustomizationTemplate *string
+
+	// AgentAttestationConfigID identifies the agent attestation config to use with this cluster.
+	// Optional.
+	AgentAttestationConfigID *string
 }
 
 type NewClusterVersionResult struct {
@@ -213,6 +231,9 @@ type ClusterFilter struct {
 
 	// Name filters clusters to those with the given name.
 	Name *string
+
+	// RealmID filters clusters to those belonging to the given realm.
+	RealmID *string
 }
 
 type Cluster struct {
@@ -259,15 +280,13 @@ type Cluster struct {
 	// TrustDomainName is the name of the trust domain the cluster belongs to.
 	TrustDomainName string
 
-	// CICDProfileID identifies the CICD profile in use with the cluster.
-	CICDProfileID string
-
-	// CICDProfileName is the name of the CICD profile in use with the cluster.
-	CICDProfileName string
-
 	// X509CustomizationTemplate is the X509-SVIDs customization template
 	// for the cluster.
 	X509CustomizationTemplate string
+
+	// JWTCustomizationTemplate is the JWT customization template for additional
+	// JWT claims that will be added to JWT-SVIDs issued by this cluster.
+	JWTCustomizationTemplate string
 }
 
 type ClusterVersion struct {
@@ -296,6 +315,10 @@ type ClusterVersion struct {
 	// X509CustomizationTemplate is the X509-SVIDs customization template
 	// for the cluster version.
 	X509CustomizationTemplate string
+
+	// JWTCustomizationTemplate is the JWT customization template for additional
+	// JWT claims that will be added to JWT-SVIDs issued by this cluster.
+	JWTCustomizationTemplate string
 
 	// ProviderAttestationConfigName is the name of the provider attestation.
 	ProviderAttestationConfigName string

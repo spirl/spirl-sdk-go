@@ -103,7 +103,7 @@ func (a *authInterceptor) refreshToken(ctx context.Context, cc grpc.ClientConnIn
 		return token, nil
 	}
 
-	a.log.Info("Authenticating...")
+	a.log.InfoContext(ctx, "Authenticating...")
 
 	// Obtain a new token.
 	token, err := a.authn.Authenticate(ctx, cc)

@@ -16,6 +16,7 @@ import (
 	"github.com/spirl/spirl-sdk-go/spirlsdk/internal/grpcproxy"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/internal/options"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/providerattestationsdk"
+	"github.com/spirl/spirl-sdk-go/spirlsdk/realmsdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/trustdomainsdk"
 )
 
@@ -30,6 +31,7 @@ type Client struct {
 	devIdentity         devidentitysdk.API
 	federation          federationsdk.API
 	providerAttestation providerattestationsdk.API
+	realm               realmsdk.API
 	trustDomain         trustdomainsdk.API
 
 	authInterceptor *authInterceptor
@@ -75,6 +77,7 @@ func New(auth auth.Authenticator, opts ...Option) (*Client, error) {
 		devIdentity:         makeDevIdentityAPI(conn),
 		federation:          makeFederationAPI(conn),
 		providerAttestation: makeProviderattestationAPI(conn),
+		realm:               makeRealmAPI(conn),
 		trustDomain:         makeTrustDomainAPI(conn),
 
 		authInterceptor: authInterceptor,
@@ -117,6 +120,11 @@ func (c *Client) DevIdentity() devidentitysdk.API {
 // Federation returns the Federation SDK API interface.
 func (c *Client) Federation() federationsdk.API {
 	return c.federation
+}
+
+// Realm returns the Realm SDK API interface.
+func (c *Client) Realm() realmsdk.API {
+	return c.realm
 }
 
 // TrustDomain returns the TrustDomain SDK API interface.

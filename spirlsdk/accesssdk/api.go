@@ -60,6 +60,21 @@ type API interface {
 	// UpdateServiceAccountRoleStatus changes the "active" status of a service account key.
 	UpdateServiceAccountKeyStatus(ctx context.Context, params UpdateServiceAccountKeyStatusParams) (*UpdateServiceAccountKeyStatusResult, error)
 
+	// AssignUserRealmRole assigns a realm role to a user.
+	AssignUserRealmRole(ctx context.Context, params AssignUserRealmRoleParams) (*AssignUserRealmRoleResult, error)
+
+	// AssignServiceAccountRealmRole assigns a realm role to a service account.
+	AssignServiceAccountRealmRole(ctx context.Context, params AssignServiceAccountRealmRoleParams) (*AssignServiceAccountRealmRoleResult, error)
+
+	// ListUserRealmRoleAssignments lists realm role assignments for a user.
+	ListUserRealmRoleAssignments(ctx context.Context, params ListUserRealmRoleAssignmentsParams) (*ListUserRealmRoleAssignmentsResult, error)
+
+	// ListServiceAccountRealmRoleAssignments lists realm role assignments for a service account.
+	ListServiceAccountRealmRoleAssignments(ctx context.Context, params ListServiceAccountRealmRoleAssignmentsParams) (*ListServiceAccountRealmRoleAssignmentsResult, error)
+
+	// RemoveRealmRoleAssignment removes a realm role assignment from any principal.
+	RemoveRealmRoleAssignment(ctx context.Context, params RemoveRealmRoleAssignmentParams) (*RemoveRealmRoleAssignmentResult, error)
+
 	// ListAuditLogs returns audit logs for the organization.
 	ListAuditLogs(ctx context.Context, params ListAuditLogsParams) (*ListAuditLogsResult, error)
 }
@@ -248,6 +263,105 @@ type UpdateServiceAccountKeyStatusResult struct {
 	// ServiceAccountKey is the updated service account key information.
 	ServiceAccountKey ServiceAccountKey
 }
+
+type AssignUserRealmRoleParams struct {
+	// UserID identifies the user to assign the realm role to. Required.
+	UserID string
+
+	// RealmID identifies the realm the role applies to. Required.
+	RealmID string
+
+	// RoleID identifies the realm role to grant. Required.
+	RoleID string
+}
+
+type AssignServiceAccountRealmRoleParams struct {
+	// ServiceAccountID identifies the service account to assign the realm role to. Required.
+	ServiceAccountID string
+
+	// RealmID identifies the realm the role applies to. Required.
+	RealmID string
+
+	// RoleID identifies the realm role to grant. Required.
+	RoleID string
+}
+
+type AssignUserRealmRoleResult struct {
+	// AssignmentID identifies the created realm role assignment.
+	AssignmentID string
+}
+
+type AssignServiceAccountRealmRoleResult struct {
+	// AssignmentID identifies the created realm role assignment.
+	AssignmentID string
+}
+
+type RemoveRealmRoleAssignmentParams struct {
+	// AssignmentID identifies the realm role assignment to remove. Required.
+	AssignmentID string
+}
+
+type RemoveRealmRoleAssignmentResult struct{}
+
+type ListUserRealmRoleAssignmentsParams struct {
+	// UserID identifies the user whose realm role assignments are listed. Required.
+	UserID string
+}
+
+type ListServiceAccountRealmRoleAssignmentsParams struct {
+	// ServiceAccountID identifies the service account whose realm role assignments are listed. Required.
+	ServiceAccountID string
+}
+
+type ListUserRealmRoleAssignmentsResult struct {
+	// Assignments are the realm role assignments for the user.
+	Assignments []RoleAssignment
+}
+
+type ListServiceAccountRealmRoleAssignmentsResult struct {
+	// Assignments are the realm role assignments for the service account.
+	Assignments []RoleAssignment
+}
+
+type RoleAssignment struct {
+	// ID identifies the role assignment.
+	ID string
+
+	// Principal identifies the principal that received the role assignment.
+	Principal RoleAssignmentPrincipal
+
+	// RealmRole describes the realm role granted by the assignment.
+	RealmRole RealmRoleAssignment
+
+	// CreatedAt is when the role assignment was created.
+	CreatedAt time.Time
+}
+
+type RealmRoleAssignment struct {
+	// RealmID identifies the realm the role applies to.
+	RealmID string
+
+	// RoleID identifies the realm role granted.
+	RoleID string
+}
+
+type RoleAssignmentPrincipal interface {
+	roleAssignmentPrincipal()
+}
+
+type UserRoleAssignmentPrincipal struct {
+	// UserID identifies the user principal on the assignment.
+	UserID string
+}
+
+func (UserRoleAssignmentPrincipal) roleAssignmentPrincipal() {}
+
+type ServiceAccountRoleAssignmentPrincipal struct {
+	// ServiceAccountID identifies the service account principal on the assignment.
+	ServiceAccountID string
+}
+
+func (ServiceAccountRoleAssignmentPrincipal) roleAssignmentPrincipal() {}
 
 type ListAuditLogsParams struct {
 	// Page provides parameters for paging the list.

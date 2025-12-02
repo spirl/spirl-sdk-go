@@ -204,8 +204,13 @@ type TrustDomainFilter struct {
 }
 
 type TrustDomainView struct {
+	// ExcludeStats, if true, excludes cluster and federation link counts.
+	// Mutually exclusive with IncludeStatus.
+	ExcludeStats bool
+
 	// IncludeStatus, if true, includes additional status information for
 	// the trust domain.
+	// Mutually exclusive with ExcludeStats.
 	IncludeStatus bool
 }
 
@@ -301,6 +306,21 @@ type TrustDomainStatus struct {
 	// than the total, then the ListLinks method in the Federation API can
 	// be used to determine which links are inactive.
 	FederationLinksActive int64
+
+	// WorkloadsTotal is the number of active and inactive workloads in the trust domain.
+	WorkloadsTotal int64
+
+	// WorkloadsActive is the number of active workloads in the trust domain.
+	WorkloadsActive int64
+
+	// CredentialsTotal is the number of credentials ever issued in the trust domain.
+	CredentialsTotal int64
+
+	// CredentialsActive is the number of active credentials in the trust domain.
+	CredentialsActive int64
+
+	// LastExpiryIn is the duration until the last currently active certificate will expire.
+	LastExpiryIn time.Duration
 }
 
 type TrustDomainDeploymentFilter struct {

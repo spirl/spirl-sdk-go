@@ -646,9 +646,12 @@ type WhoamiResponse struct {
 	//
 	//	*WhoamiResponse_User
 	//	*WhoamiResponse_ServiceAccount
+	//	*WhoamiResponse_EmployeeAdmin
 	Identity isWhoamiResponse_Identity `protobuf_oneof:"identity"`
 	// The org role of the identity.
 	OrgRole *OrgRole `protobuf:"bytes,4,opt,name=org_role,json=orgRole,proto3" json:"org_role,omitempty"`
+	// The org ID of the identity.
+	OrgId string `protobuf:"bytes,5,opt,name=org_id,json=orgId,proto3" json:"org_id,omitempty"`
 }
 
 func (x *WhoamiResponse) Reset() {
@@ -711,11 +714,25 @@ func (x *WhoamiResponse) GetServiceAccount() *ServiceAccount {
 	return nil
 }
 
+func (x *WhoamiResponse) GetEmployeeAdmin() *EmployeeAdmin {
+	if x, ok := x.GetIdentity().(*WhoamiResponse_EmployeeAdmin); ok {
+		return x.EmployeeAdmin
+	}
+	return nil
+}
+
 func (x *WhoamiResponse) GetOrgRole() *OrgRole {
 	if x != nil {
 		return x.OrgRole
 	}
 	return nil
+}
+
+func (x *WhoamiResponse) GetOrgId() string {
+	if x != nil {
+		return x.OrgId
+	}
+	return ""
 }
 
 type isWhoamiResponse_Identity interface {
@@ -730,9 +747,15 @@ type WhoamiResponse_ServiceAccount struct {
 	ServiceAccount *ServiceAccount `protobuf:"bytes,3,opt,name=service_account,json=serviceAccount,proto3,oneof"`
 }
 
+type WhoamiResponse_EmployeeAdmin struct {
+	EmployeeAdmin *EmployeeAdmin `protobuf:"bytes,6,opt,name=employee_admin,json=employeeAdmin,proto3,oneof"`
+}
+
 func (*WhoamiResponse_User) isWhoamiResponse_Identity() {}
 
 func (*WhoamiResponse_ServiceAccount) isWhoamiResponse_Identity() {}
+
+func (*WhoamiResponse_EmployeeAdmin) isWhoamiResponse_Identity() {}
 
 type User struct {
 	state         protoimpl.MessageState
@@ -944,6 +967,63 @@ func (x *ServiceAccountKey) GetId() string {
 	return ""
 }
 
+type EmployeeAdmin struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The employee admin's ID.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The employee admin's email address.
+	Email string `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+}
+
+func (x *EmployeeAdmin) Reset() {
+	*x = EmployeeAdmin{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EmployeeAdmin) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EmployeeAdmin) ProtoMessage() {}
+
+func (x *EmployeeAdmin) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EmployeeAdmin.ProtoReflect.Descriptor instead.
+func (*EmployeeAdmin) Descriptor() ([]byte, []int) {
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *EmployeeAdmin) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *EmployeeAdmin) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
 type AuthenticateServiceAccountRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -959,7 +1039,7 @@ type AuthenticateServiceAccountRequest struct {
 func (x *AuthenticateServiceAccountRequest) Reset() {
 	*x = AuthenticateServiceAccountRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[15]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -972,7 +1052,7 @@ func (x *AuthenticateServiceAccountRequest) String() string {
 func (*AuthenticateServiceAccountRequest) ProtoMessage() {}
 
 func (x *AuthenticateServiceAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[15]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -985,7 +1065,7 @@ func (x *AuthenticateServiceAccountRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use AuthenticateServiceAccountRequest.ProtoReflect.Descriptor instead.
 func (*AuthenticateServiceAccountRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{15}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{16}
 }
 
 func (m *AuthenticateServiceAccountRequest) GetRequest() isAuthenticateServiceAccountRequest_Request {
@@ -1038,7 +1118,7 @@ type ServiceAccountKeyLogin struct {
 func (x *ServiceAccountKeyLogin) Reset() {
 	*x = ServiceAccountKeyLogin{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[16]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1051,7 +1131,7 @@ func (x *ServiceAccountKeyLogin) String() string {
 func (*ServiceAccountKeyLogin) ProtoMessage() {}
 
 func (x *ServiceAccountKeyLogin) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[16]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1064,7 +1144,7 @@ func (x *ServiceAccountKeyLogin) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceAccountKeyLogin.ProtoReflect.Descriptor instead.
 func (*ServiceAccountKeyLogin) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{16}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ServiceAccountKeyLogin) GetKeyId() string {
@@ -1086,7 +1166,7 @@ type ServiceAccountKeyAuthorization struct {
 func (x *ServiceAccountKeyAuthorization) Reset() {
 	*x = ServiceAccountKeyAuthorization{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[17]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1099,7 +1179,7 @@ func (x *ServiceAccountKeyAuthorization) String() string {
 func (*ServiceAccountKeyAuthorization) ProtoMessage() {}
 
 func (x *ServiceAccountKeyAuthorization) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[17]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1112,7 +1192,7 @@ func (x *ServiceAccountKeyAuthorization) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceAccountKeyAuthorization.ProtoReflect.Descriptor instead.
 func (*ServiceAccountKeyAuthorization) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{17}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *ServiceAccountKeyAuthorization) GetServiceAccountKeyProof() *ServiceAccountKeyProof {
@@ -1137,7 +1217,7 @@ type ServiceAccountKeyProof struct {
 func (x *ServiceAccountKeyProof) Reset() {
 	*x = ServiceAccountKeyProof{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[18]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1150,7 +1230,7 @@ func (x *ServiceAccountKeyProof) String() string {
 func (*ServiceAccountKeyProof) ProtoMessage() {}
 
 func (x *ServiceAccountKeyProof) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[18]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1163,7 +1243,7 @@ func (x *ServiceAccountKeyProof) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServiceAccountKeyProof.ProtoReflect.Descriptor instead.
 func (*ServiceAccountKeyProof) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{18}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ServiceAccountKeyProof) GetSignature() []byte {
@@ -1195,7 +1275,7 @@ type AuthenticateServiceAccountResponse struct {
 func (x *AuthenticateServiceAccountResponse) Reset() {
 	*x = AuthenticateServiceAccountResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[19]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1208,7 +1288,7 @@ func (x *AuthenticateServiceAccountResponse) String() string {
 func (*AuthenticateServiceAccountResponse) ProtoMessage() {}
 
 func (x *AuthenticateServiceAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[19]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1221,7 +1301,7 @@ func (x *AuthenticateServiceAccountResponse) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use AuthenticateServiceAccountResponse.ProtoReflect.Descriptor instead.
 func (*AuthenticateServiceAccountResponse) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{19}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{20}
 }
 
 func (m *AuthenticateServiceAccountResponse) GetResponse() isAuthenticateServiceAccountResponse_Response {
@@ -1271,7 +1351,7 @@ type ListOrgsRequest struct {
 func (x *ListOrgsRequest) Reset() {
 	*x = ListOrgsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[20]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1284,7 +1364,7 @@ func (x *ListOrgsRequest) String() string {
 func (*ListOrgsRequest) ProtoMessage() {}
 
 func (x *ListOrgsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[20]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1297,7 +1377,7 @@ func (x *ListOrgsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOrgsRequest.ProtoReflect.Descriptor instead.
 func (*ListOrgsRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{20}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{21}
 }
 
 type ListOrgsResponse struct {
@@ -1311,7 +1391,7 @@ type ListOrgsResponse struct {
 func (x *ListOrgsResponse) Reset() {
 	*x = ListOrgsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[21]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1324,7 +1404,7 @@ func (x *ListOrgsResponse) String() string {
 func (*ListOrgsResponse) ProtoMessage() {}
 
 func (x *ListOrgsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[21]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1337,7 +1417,7 @@ func (x *ListOrgsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListOrgsResponse.ProtoReflect.Descriptor instead.
 func (*ListOrgsResponse) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{21}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *ListOrgsResponse) GetOrgs() []*Org {
@@ -1359,7 +1439,7 @@ type SessionChallenge struct {
 func (x *SessionChallenge) Reset() {
 	*x = SessionChallenge{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[22]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1372,7 +1452,7 @@ func (x *SessionChallenge) String() string {
 func (*SessionChallenge) ProtoMessage() {}
 
 func (x *SessionChallenge) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[22]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1385,7 +1465,7 @@ func (x *SessionChallenge) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SessionChallenge.ProtoReflect.Descriptor instead.
 func (*SessionChallenge) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{22}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *SessionChallenge) GetServerNonce() []byte {
@@ -1407,7 +1487,7 @@ type SessionInfo struct {
 func (x *SessionInfo) Reset() {
 	*x = SessionInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[23]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1420,7 +1500,7 @@ func (x *SessionInfo) String() string {
 func (*SessionInfo) ProtoMessage() {}
 
 func (x *SessionInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[23]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1433,7 +1513,7 @@ func (x *SessionInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SessionInfo.ProtoReflect.Descriptor instead.
 func (*SessionInfo) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{23}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *SessionInfo) GetToken() string {
@@ -1457,7 +1537,7 @@ type OrgRole struct {
 func (x *OrgRole) Reset() {
 	*x = OrgRole{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[24]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1470,7 +1550,7 @@ func (x *OrgRole) String() string {
 func (*OrgRole) ProtoMessage() {}
 
 func (x *OrgRole) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[24]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1483,7 +1563,7 @@ func (x *OrgRole) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrgRole.ProtoReflect.Descriptor instead.
 func (*OrgRole) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{24}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *OrgRole) GetId() string {
@@ -1512,7 +1592,7 @@ type Org struct {
 func (x *Org) Reset() {
 	*x = Org{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_sessionapi_api_proto_msgTypes[25]
+		mi := &file_api_v1_sessionapi_api_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1525,7 +1605,7 @@ func (x *Org) String() string {
 func (*Org) ProtoMessage() {}
 
 func (x *Org) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_sessionapi_api_proto_msgTypes[25]
+	mi := &file_api_v1_sessionapi_api_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1538,7 +1618,7 @@ func (x *Org) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Org.ProtoReflect.Descriptor instead.
 func (*Org) Descriptor() ([]byte, []int) {
-	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{25}
+	return file_api_v1_sessionapi_api_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *Org) GetId() string {
@@ -1621,7 +1701,7 @@ var file_api_v1_sessionapi_api_proto_rawDesc = []byte{
 	0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x03, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x4a, 0x04, 0x08, 0x01, 0x10, 0x02, 0x4a,
 	0x04, 0x08, 0x02, 0x10, 0x03, 0x22, 0x0f, 0x0a, 0x0d, 0x57, 0x68, 0x6f, 0x61, 0x6d, 0x69, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x80, 0x02, 0x0a, 0x0e, 0x57, 0x68, 0x6f, 0x61, 0x6d,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0xe9, 0x02, 0x0a, 0x0e, 0x57, 0x68, 0x6f, 0x61, 0x6d,
 	0x69, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x6f, 0x72, 0x67,
 	0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6f, 0x72, 0x67,
 	0x4e, 0x61, 0x6d, 0x65, 0x12, 0x34, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01,
@@ -1633,32 +1713,42 @@ var file_api_v1_sessionapi_api_proto_rawDesc = []byte{
 	0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x2e, 0x53,
 	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x48, 0x00, 0x52,
 	0x0e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12,
-	0x3c, 0x0a, 0x08, 0x6f, 0x72, 0x67, 0x5f, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28,
-	0x0b, 0x32, 0x21, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x2e, 0x4f, 0x72, 0x67,
-	0x52, 0x6f, 0x6c, 0x65, 0x52, 0x07, 0x6f, 0x72, 0x67, 0x52, 0x6f, 0x6c, 0x65, 0x42, 0x0a, 0x0a,
-	0x08, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x22, 0x63, 0x0a, 0x04, 0x55, 0x73, 0x65,
-	0x72, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x12, 0x0e, 0x0a, 0x02, 0x69,
-	0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x21, 0x0a, 0x0c, 0x73,
-	0x73, 0x6f, 0x5f, 0x70, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x18, 0x04, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x0b, 0x73, 0x73, 0x6f, 0x50, 0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x22, 0xbe,
-	0x01, 0x0a, 0x0e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e,
-	0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70,
-	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63,
-	0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x5d, 0x0a, 0x13, 0x73, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x5f, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x6b, 0x65, 0x79, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x2b, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c,
-	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x2e,
-	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x4b, 0x65,
-	0x79, 0x48, 0x00, 0x52, 0x11, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f,
-	0x75, 0x6e, 0x74, 0x4b, 0x65, 0x79, 0x42, 0x17, 0x0a, 0x15, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e,
-	0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x22,
-	0x23, 0x0a, 0x11, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e,
-	0x74, 0x4b, 0x65, 0x79, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x02, 0x69, 0x64, 0x22, 0xda, 0x01, 0x0a, 0x21, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74,
+	0x50, 0x0a, 0x0e, 0x65, 0x6d, 0x70, 0x6c, 0x6f, 0x79, 0x65, 0x65, 0x5f, 0x61, 0x64, 0x6d, 0x69,
+	0x6e, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x27, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70,
+	0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x73, 0x73, 0x69,
+	0x6f, 0x6e, 0x2e, 0x45, 0x6d, 0x70, 0x6c, 0x6f, 0x79, 0x65, 0x65, 0x41, 0x64, 0x6d, 0x69, 0x6e,
+	0x48, 0x00, 0x52, 0x0d, 0x65, 0x6d, 0x70, 0x6c, 0x6f, 0x79, 0x65, 0x65, 0x41, 0x64, 0x6d, 0x69,
+	0x6e, 0x12, 0x3c, 0x0a, 0x08, 0x6f, 0x72, 0x67, 0x5f, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x04, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x2e, 0x4f,
+	0x72, 0x67, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x07, 0x6f, 0x72, 0x67, 0x52, 0x6f, 0x6c, 0x65, 0x12,
+	0x15, 0x0a, 0x06, 0x6f, 0x72, 0x67, 0x5f, 0x69, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x6f, 0x72, 0x67, 0x49, 0x64, 0x42, 0x0a, 0x0a, 0x08, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69,
+	0x74, 0x79, 0x22, 0x63, 0x0a, 0x04, 0x55, 0x73, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14,
+	0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65,
+	0x6d, 0x61, 0x69, 0x6c, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x02, 0x69, 0x64, 0x12, 0x21, 0x0a, 0x0c, 0x73, 0x73, 0x6f, 0x5f, 0x70, 0x72, 0x6f, 0x76,
+	0x69, 0x64, 0x65, 0x72, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x73, 0x73, 0x6f, 0x50,
+	0x72, 0x6f, 0x76, 0x69, 0x64, 0x65, 0x72, 0x22, 0xbe, 0x01, 0x0a, 0x0e, 0x53, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x20,
+	0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e,
+	0x12, 0x5d, 0x0a, 0x13, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x61, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x5f, 0x6b, 0x65, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2b, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31,
+	0x2e, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x4b, 0x65, 0x79, 0x48, 0x00, 0x52, 0x11, 0x73, 0x65,
+	0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x4b, 0x65, 0x79, 0x42,
+	0x17, 0x0a, 0x15, 0x61, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x5f, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x22, 0x23, 0x0a, 0x11, 0x53, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x4b, 0x65, 0x79, 0x12, 0x0e, 0x0a,
+	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x35, 0x0a,
+	0x0d, 0x45, 0x6d, 0x70, 0x6c, 0x6f, 0x79, 0x65, 0x65, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x12, 0x0e,
+	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14,
+	0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65,
+	0x6d, 0x61, 0x69, 0x6c, 0x22, 0xda, 0x01, 0x0a, 0x21, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74,
 	0x69, 0x63, 0x61, 0x74, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f,
 	0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x48, 0x0a, 0x05, 0x6c, 0x6f,
 	0x67, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x30, 0x2e, 0x63, 0x6f, 0x6d, 0x2e,
@@ -1771,7 +1861,7 @@ func file_api_v1_sessionapi_api_proto_rawDescGZIP() []byte {
 	return file_api_v1_sessionapi_api_proto_rawDescData
 }
 
-var file_api_v1_sessionapi_api_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_api_v1_sessionapi_api_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_api_v1_sessionapi_api_proto_goTypes = []any{
 	(*LoginRequest)(nil),                       // 0: com.spirl.api.v1.session.LoginRequest
 	(*LoginResponse)(nil),                      // 1: com.spirl.api.v1.session.LoginResponse
@@ -1788,17 +1878,18 @@ var file_api_v1_sessionapi_api_proto_goTypes = []any{
 	(*User)(nil),                               // 12: com.spirl.api.v1.session.User
 	(*ServiceAccount)(nil),                     // 13: com.spirl.api.v1.session.ServiceAccount
 	(*ServiceAccountKey)(nil),                  // 14: com.spirl.api.v1.session.ServiceAccountKey
-	(*AuthenticateServiceAccountRequest)(nil),  // 15: com.spirl.api.v1.session.AuthenticateServiceAccountRequest
-	(*ServiceAccountKeyLogin)(nil),             // 16: com.spirl.api.v1.session.ServiceAccountKeyLogin
-	(*ServiceAccountKeyAuthorization)(nil),     // 17: com.spirl.api.v1.session.ServiceAccountKeyAuthorization
-	(*ServiceAccountKeyProof)(nil),             // 18: com.spirl.api.v1.session.ServiceAccountKeyProof
-	(*AuthenticateServiceAccountResponse)(nil), // 19: com.spirl.api.v1.session.AuthenticateServiceAccountResponse
-	(*ListOrgsRequest)(nil),                    // 20: com.spirl.api.v1.session.ListOrgsRequest
-	(*ListOrgsResponse)(nil),                   // 21: com.spirl.api.v1.session.ListOrgsResponse
-	(*SessionChallenge)(nil),                   // 22: com.spirl.api.v1.session.SessionChallenge
-	(*SessionInfo)(nil),                        // 23: com.spirl.api.v1.session.SessionInfo
-	(*OrgRole)(nil),                            // 24: com.spirl.api.v1.session.OrgRole
-	(*Org)(nil),                                // 25: com.spirl.api.v1.session.Org
+	(*EmployeeAdmin)(nil),                      // 15: com.spirl.api.v1.session.EmployeeAdmin
+	(*AuthenticateServiceAccountRequest)(nil),  // 16: com.spirl.api.v1.session.AuthenticateServiceAccountRequest
+	(*ServiceAccountKeyLogin)(nil),             // 17: com.spirl.api.v1.session.ServiceAccountKeyLogin
+	(*ServiceAccountKeyAuthorization)(nil),     // 18: com.spirl.api.v1.session.ServiceAccountKeyAuthorization
+	(*ServiceAccountKeyProof)(nil),             // 19: com.spirl.api.v1.session.ServiceAccountKeyProof
+	(*AuthenticateServiceAccountResponse)(nil), // 20: com.spirl.api.v1.session.AuthenticateServiceAccountResponse
+	(*ListOrgsRequest)(nil),                    // 21: com.spirl.api.v1.session.ListOrgsRequest
+	(*ListOrgsResponse)(nil),                   // 22: com.spirl.api.v1.session.ListOrgsResponse
+	(*SessionChallenge)(nil),                   // 23: com.spirl.api.v1.session.SessionChallenge
+	(*SessionInfo)(nil),                        // 24: com.spirl.api.v1.session.SessionInfo
+	(*OrgRole)(nil),                            // 25: com.spirl.api.v1.session.OrgRole
+	(*Org)(nil),                                // 26: com.spirl.api.v1.session.Org
 }
 var file_api_v1_sessionapi_api_proto_depIdxs = []int32{
 	4,  // 0: com.spirl.api.v1.session.LoginRequest.start:type_name -> com.spirl.api.v1.session.StartLoginRequest
@@ -1809,29 +1900,30 @@ var file_api_v1_sessionapi_api_proto_depIdxs = []int32{
 	7,  // 5: com.spirl.api.v1.session.LoginResponse.choose_org:type_name -> com.spirl.api.v1.session.ChooseOrgResponse
 	12, // 6: com.spirl.api.v1.session.WhoamiResponse.user:type_name -> com.spirl.api.v1.session.User
 	13, // 7: com.spirl.api.v1.session.WhoamiResponse.service_account:type_name -> com.spirl.api.v1.session.ServiceAccount
-	24, // 8: com.spirl.api.v1.session.WhoamiResponse.org_role:type_name -> com.spirl.api.v1.session.OrgRole
-	14, // 9: com.spirl.api.v1.session.ServiceAccount.service_account_key:type_name -> com.spirl.api.v1.session.ServiceAccountKey
-	16, // 10: com.spirl.api.v1.session.AuthenticateServiceAccountRequest.login:type_name -> com.spirl.api.v1.session.ServiceAccountKeyLogin
-	17, // 11: com.spirl.api.v1.session.AuthenticateServiceAccountRequest.authorization:type_name -> com.spirl.api.v1.session.ServiceAccountKeyAuthorization
-	18, // 12: com.spirl.api.v1.session.ServiceAccountKeyAuthorization.service_account_key_proof:type_name -> com.spirl.api.v1.session.ServiceAccountKeyProof
-	22, // 13: com.spirl.api.v1.session.AuthenticateServiceAccountResponse.challenge:type_name -> com.spirl.api.v1.session.SessionChallenge
-	23, // 14: com.spirl.api.v1.session.AuthenticateServiceAccountResponse.session:type_name -> com.spirl.api.v1.session.SessionInfo
-	25, // 15: com.spirl.api.v1.session.ListOrgsResponse.orgs:type_name -> com.spirl.api.v1.session.Org
-	0,  // 16: com.spirl.api.v1.session.API.Login:input_type -> com.spirl.api.v1.session.LoginRequest
-	15, // 17: com.spirl.api.v1.session.API.AuthenticateServiceAccount:input_type -> com.spirl.api.v1.session.AuthenticateServiceAccountRequest
-	10, // 18: com.spirl.api.v1.session.API.Whoami:input_type -> com.spirl.api.v1.session.WhoamiRequest
-	20, // 19: com.spirl.api.v1.session.API.ListOrgs:input_type -> com.spirl.api.v1.session.ListOrgsRequest
-	2,  // 20: com.spirl.api.v1.session.API.Logout:input_type -> com.spirl.api.v1.session.LogoutRequest
-	1,  // 21: com.spirl.api.v1.session.API.Login:output_type -> com.spirl.api.v1.session.LoginResponse
-	19, // 22: com.spirl.api.v1.session.API.AuthenticateServiceAccount:output_type -> com.spirl.api.v1.session.AuthenticateServiceAccountResponse
-	11, // 23: com.spirl.api.v1.session.API.Whoami:output_type -> com.spirl.api.v1.session.WhoamiResponse
-	21, // 24: com.spirl.api.v1.session.API.ListOrgs:output_type -> com.spirl.api.v1.session.ListOrgsResponse
-	3,  // 25: com.spirl.api.v1.session.API.Logout:output_type -> com.spirl.api.v1.session.LogoutResponse
-	21, // [21:26] is the sub-list for method output_type
-	16, // [16:21] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	15, // 8: com.spirl.api.v1.session.WhoamiResponse.employee_admin:type_name -> com.spirl.api.v1.session.EmployeeAdmin
+	25, // 9: com.spirl.api.v1.session.WhoamiResponse.org_role:type_name -> com.spirl.api.v1.session.OrgRole
+	14, // 10: com.spirl.api.v1.session.ServiceAccount.service_account_key:type_name -> com.spirl.api.v1.session.ServiceAccountKey
+	17, // 11: com.spirl.api.v1.session.AuthenticateServiceAccountRequest.login:type_name -> com.spirl.api.v1.session.ServiceAccountKeyLogin
+	18, // 12: com.spirl.api.v1.session.AuthenticateServiceAccountRequest.authorization:type_name -> com.spirl.api.v1.session.ServiceAccountKeyAuthorization
+	19, // 13: com.spirl.api.v1.session.ServiceAccountKeyAuthorization.service_account_key_proof:type_name -> com.spirl.api.v1.session.ServiceAccountKeyProof
+	23, // 14: com.spirl.api.v1.session.AuthenticateServiceAccountResponse.challenge:type_name -> com.spirl.api.v1.session.SessionChallenge
+	24, // 15: com.spirl.api.v1.session.AuthenticateServiceAccountResponse.session:type_name -> com.spirl.api.v1.session.SessionInfo
+	26, // 16: com.spirl.api.v1.session.ListOrgsResponse.orgs:type_name -> com.spirl.api.v1.session.Org
+	0,  // 17: com.spirl.api.v1.session.API.Login:input_type -> com.spirl.api.v1.session.LoginRequest
+	16, // 18: com.spirl.api.v1.session.API.AuthenticateServiceAccount:input_type -> com.spirl.api.v1.session.AuthenticateServiceAccountRequest
+	10, // 19: com.spirl.api.v1.session.API.Whoami:input_type -> com.spirl.api.v1.session.WhoamiRequest
+	21, // 20: com.spirl.api.v1.session.API.ListOrgs:input_type -> com.spirl.api.v1.session.ListOrgsRequest
+	2,  // 21: com.spirl.api.v1.session.API.Logout:input_type -> com.spirl.api.v1.session.LogoutRequest
+	1,  // 22: com.spirl.api.v1.session.API.Login:output_type -> com.spirl.api.v1.session.LoginResponse
+	20, // 23: com.spirl.api.v1.session.API.AuthenticateServiceAccount:output_type -> com.spirl.api.v1.session.AuthenticateServiceAccountResponse
+	11, // 24: com.spirl.api.v1.session.API.Whoami:output_type -> com.spirl.api.v1.session.WhoamiResponse
+	22, // 25: com.spirl.api.v1.session.API.ListOrgs:output_type -> com.spirl.api.v1.session.ListOrgsResponse
+	3,  // 26: com.spirl.api.v1.session.API.Logout:output_type -> com.spirl.api.v1.session.LogoutResponse
+	22, // [22:27] is the sub-list for method output_type
+	17, // [17:22] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_sessionapi_api_proto_init() }
@@ -2021,7 +2113,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[15].Exporter = func(v any, i int) any {
-			switch v := v.(*AuthenticateServiceAccountRequest); i {
+			switch v := v.(*EmployeeAdmin); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2033,7 +2125,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[16].Exporter = func(v any, i int) any {
-			switch v := v.(*ServiceAccountKeyLogin); i {
+			switch v := v.(*AuthenticateServiceAccountRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2045,7 +2137,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[17].Exporter = func(v any, i int) any {
-			switch v := v.(*ServiceAccountKeyAuthorization); i {
+			switch v := v.(*ServiceAccountKeyLogin); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2057,7 +2149,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[18].Exporter = func(v any, i int) any {
-			switch v := v.(*ServiceAccountKeyProof); i {
+			switch v := v.(*ServiceAccountKeyAuthorization); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2069,7 +2161,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[19].Exporter = func(v any, i int) any {
-			switch v := v.(*AuthenticateServiceAccountResponse); i {
+			switch v := v.(*ServiceAccountKeyProof); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2081,7 +2173,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[20].Exporter = func(v any, i int) any {
-			switch v := v.(*ListOrgsRequest); i {
+			switch v := v.(*AuthenticateServiceAccountResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2093,7 +2185,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[21].Exporter = func(v any, i int) any {
-			switch v := v.(*ListOrgsResponse); i {
+			switch v := v.(*ListOrgsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2105,7 +2197,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[22].Exporter = func(v any, i int) any {
-			switch v := v.(*SessionChallenge); i {
+			switch v := v.(*ListOrgsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2117,7 +2209,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[23].Exporter = func(v any, i int) any {
-			switch v := v.(*SessionInfo); i {
+			switch v := v.(*SessionChallenge); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2129,7 +2221,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[24].Exporter = func(v any, i int) any {
-			switch v := v.(*OrgRole); i {
+			switch v := v.(*SessionInfo); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2141,6 +2233,18 @@ func file_api_v1_sessionapi_api_proto_init() {
 			}
 		}
 		file_api_v1_sessionapi_api_proto_msgTypes[25].Exporter = func(v any, i int) any {
+			switch v := v.(*OrgRole); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_sessionapi_api_proto_msgTypes[26].Exporter = func(v any, i int) any {
 			switch v := v.(*Org); i {
 			case 0:
 				return &v.state
@@ -2166,15 +2270,16 @@ func file_api_v1_sessionapi_api_proto_init() {
 	file_api_v1_sessionapi_api_proto_msgTypes[11].OneofWrappers = []any{
 		(*WhoamiResponse_User)(nil),
 		(*WhoamiResponse_ServiceAccount)(nil),
+		(*WhoamiResponse_EmployeeAdmin)(nil),
 	}
 	file_api_v1_sessionapi_api_proto_msgTypes[13].OneofWrappers = []any{
 		(*ServiceAccount_ServiceAccountKey)(nil),
 	}
-	file_api_v1_sessionapi_api_proto_msgTypes[15].OneofWrappers = []any{
+	file_api_v1_sessionapi_api_proto_msgTypes[16].OneofWrappers = []any{
 		(*AuthenticateServiceAccountRequest_Login)(nil),
 		(*AuthenticateServiceAccountRequest_Authorization)(nil),
 	}
-	file_api_v1_sessionapi_api_proto_msgTypes[19].OneofWrappers = []any{
+	file_api_v1_sessionapi_api_proto_msgTypes[20].OneofWrappers = []any{
 		(*AuthenticateServiceAccountResponse_Challenge)(nil),
 		(*AuthenticateServiceAccountResponse_Session)(nil),
 	}
@@ -2184,7 +2289,7 @@ func file_api_v1_sessionapi_api_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_v1_sessionapi_api_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   26,
+			NumMessages:   27,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	API_ListOrgRoles_FullMethodName                  = "/com.spirl.api.v1.access.API/ListOrgRoles"
+	API_ListRoles_FullMethodName                     = "/com.spirl.api.v1.access.API/ListRoles"
 	API_ListUsers_FullMethodName                     = "/com.spirl.api.v1.access.API/ListUsers"
 	API_UpdateUserRole_FullMethodName                = "/com.spirl.api.v1.access.API/UpdateUserRole"
 	API_DeleteUser_FullMethodName                    = "/com.spirl.api.v1.access.API/DeleteUser"
@@ -36,6 +37,11 @@ const (
 	API_DeleteServiceAccountKey_FullMethodName       = "/com.spirl.api.v1.access.API/DeleteServiceAccountKey"
 	API_UpdateServiceAccountKeyStatus_FullMethodName = "/com.spirl.api.v1.access.API/UpdateServiceAccountKeyStatus"
 	API_ListAuditLogs_FullMethodName                 = "/com.spirl.api.v1.access.API/ListAuditLogs"
+	API_UpdateOrgSettings_FullMethodName             = "/com.spirl.api.v1.access.API/UpdateOrgSettings"
+	API_GetOrgSettings_FullMethodName                = "/com.spirl.api.v1.access.API/GetOrgSettings"
+	API_AssignRoleAssignment_FullMethodName          = "/com.spirl.api.v1.access.API/AssignRoleAssignment"
+	API_RemoveRoleAssignment_FullMethodName          = "/com.spirl.api.v1.access.API/RemoveRoleAssignment"
+	API_ListRoleAssignments_FullMethodName           = "/com.spirl.api.v1.access.API/ListRoleAssignments"
 )
 
 // APIClient is the client API for API service.
@@ -44,6 +50,8 @@ const (
 type APIClient interface {
 	// Lists the organization roles.
 	ListOrgRoles(ctx context.Context, in *ListOrgRolesRequest, opts ...grpc.CallOption) (*ListOrgRolesResponse, error)
+	// Lists roles (org roles and realm roles) with optional filtering.
+	ListRoles(ctx context.Context, in *ListRolesRequest, opts ...grpc.CallOption) (*ListRolesResponse, error)
 	// Lists users in the organization.
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	// Updates the role of a user in the organization.
@@ -82,6 +90,16 @@ type APIClient interface {
 	UpdateServiceAccountKeyStatus(ctx context.Context, in *UpdateServiceAccountKeyStatusRequest, opts ...grpc.CallOption) (*UpdateServiceAccountKeyStatusResponse, error)
 	// Lists the audit logs for the organization.
 	ListAuditLogs(ctx context.Context, in *ListAuditLogsRequest, opts ...grpc.CallOption) (*ListAuditLogsResponse, error)
+	// Updates organization settings.
+	UpdateOrgSettings(ctx context.Context, in *UpdateOrgSettingsRequest, opts ...grpc.CallOption) (*UpdateOrgSettingsResponse, error)
+	// Gets organization settings.
+	GetOrgSettings(ctx context.Context, in *GetOrgSettingsRequest, opts ...grpc.CallOption) (*GetOrgSettingsResponse, error)
+	// Assigns a role to a user.
+	AssignRoleAssignment(ctx context.Context, in *AssignRoleAssignmentRequest, opts ...grpc.CallOption) (*AssignRoleAssignmentResponse, error)
+	// Removes a role assignment from a user.
+	RemoveRoleAssignment(ctx context.Context, in *RemoveRoleAssignmentRequest, opts ...grpc.CallOption) (*RemoveRoleAssignmentResponse, error)
+	// Lists role assignments with optional filtering.
+	ListRoleAssignments(ctx context.Context, in *ListRoleAssignmentsRequest, opts ...grpc.CallOption) (*ListRoleAssignmentsResponse, error)
 }
 
 type aPIClient struct {
@@ -96,6 +114,16 @@ func (c *aPIClient) ListOrgRoles(ctx context.Context, in *ListOrgRolesRequest, o
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListOrgRolesResponse)
 	err := c.cc.Invoke(ctx, API_ListOrgRoles_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIClient) ListRoles(ctx context.Context, in *ListRolesRequest, opts ...grpc.CallOption) (*ListRolesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListRolesResponse)
+	err := c.cc.Invoke(ctx, API_ListRoles_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -262,12 +290,64 @@ func (c *aPIClient) ListAuditLogs(ctx context.Context, in *ListAuditLogsRequest,
 	return out, nil
 }
 
+func (c *aPIClient) UpdateOrgSettings(ctx context.Context, in *UpdateOrgSettingsRequest, opts ...grpc.CallOption) (*UpdateOrgSettingsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateOrgSettingsResponse)
+	err := c.cc.Invoke(ctx, API_UpdateOrgSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIClient) GetOrgSettings(ctx context.Context, in *GetOrgSettingsRequest, opts ...grpc.CallOption) (*GetOrgSettingsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetOrgSettingsResponse)
+	err := c.cc.Invoke(ctx, API_GetOrgSettings_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIClient) AssignRoleAssignment(ctx context.Context, in *AssignRoleAssignmentRequest, opts ...grpc.CallOption) (*AssignRoleAssignmentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AssignRoleAssignmentResponse)
+	err := c.cc.Invoke(ctx, API_AssignRoleAssignment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIClient) RemoveRoleAssignment(ctx context.Context, in *RemoveRoleAssignmentRequest, opts ...grpc.CallOption) (*RemoveRoleAssignmentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RemoveRoleAssignmentResponse)
+	err := c.cc.Invoke(ctx, API_RemoveRoleAssignment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIClient) ListRoleAssignments(ctx context.Context, in *ListRoleAssignmentsRequest, opts ...grpc.CallOption) (*ListRoleAssignmentsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListRoleAssignmentsResponse)
+	err := c.cc.Invoke(ctx, API_ListRoleAssignments_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // APIServer is the server API for API service.
 // All implementations must embed UnimplementedAPIServer
 // for forward compatibility.
 type APIServer interface {
 	// Lists the organization roles.
 	ListOrgRoles(context.Context, *ListOrgRolesRequest) (*ListOrgRolesResponse, error)
+	// Lists roles (org roles and realm roles) with optional filtering.
+	ListRoles(context.Context, *ListRolesRequest) (*ListRolesResponse, error)
 	// Lists users in the organization.
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// Updates the role of a user in the organization.
@@ -306,6 +386,16 @@ type APIServer interface {
 	UpdateServiceAccountKeyStatus(context.Context, *UpdateServiceAccountKeyStatusRequest) (*UpdateServiceAccountKeyStatusResponse, error)
 	// Lists the audit logs for the organization.
 	ListAuditLogs(context.Context, *ListAuditLogsRequest) (*ListAuditLogsResponse, error)
+	// Updates organization settings.
+	UpdateOrgSettings(context.Context, *UpdateOrgSettingsRequest) (*UpdateOrgSettingsResponse, error)
+	// Gets organization settings.
+	GetOrgSettings(context.Context, *GetOrgSettingsRequest) (*GetOrgSettingsResponse, error)
+	// Assigns a role to a user.
+	AssignRoleAssignment(context.Context, *AssignRoleAssignmentRequest) (*AssignRoleAssignmentResponse, error)
+	// Removes a role assignment from a user.
+	RemoveRoleAssignment(context.Context, *RemoveRoleAssignmentRequest) (*RemoveRoleAssignmentResponse, error)
+	// Lists role assignments with optional filtering.
+	ListRoleAssignments(context.Context, *ListRoleAssignmentsRequest) (*ListRoleAssignmentsResponse, error)
 	mustEmbedUnimplementedAPIServer()
 }
 
@@ -318,6 +408,9 @@ type UnimplementedAPIServer struct{}
 
 func (UnimplementedAPIServer) ListOrgRoles(context.Context, *ListOrgRolesRequest) (*ListOrgRolesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOrgRoles not implemented")
+}
+func (UnimplementedAPIServer) ListRoles(context.Context, *ListRolesRequest) (*ListRolesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRoles not implemented")
 }
 func (UnimplementedAPIServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
@@ -367,6 +460,21 @@ func (UnimplementedAPIServer) UpdateServiceAccountKeyStatus(context.Context, *Up
 func (UnimplementedAPIServer) ListAuditLogs(context.Context, *ListAuditLogsRequest) (*ListAuditLogsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuditLogs not implemented")
 }
+func (UnimplementedAPIServer) UpdateOrgSettings(context.Context, *UpdateOrgSettingsRequest) (*UpdateOrgSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrgSettings not implemented")
+}
+func (UnimplementedAPIServer) GetOrgSettings(context.Context, *GetOrgSettingsRequest) (*GetOrgSettingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrgSettings not implemented")
+}
+func (UnimplementedAPIServer) AssignRoleAssignment(context.Context, *AssignRoleAssignmentRequest) (*AssignRoleAssignmentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AssignRoleAssignment not implemented")
+}
+func (UnimplementedAPIServer) RemoveRoleAssignment(context.Context, *RemoveRoleAssignmentRequest) (*RemoveRoleAssignmentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveRoleAssignment not implemented")
+}
+func (UnimplementedAPIServer) ListRoleAssignments(context.Context, *ListRoleAssignmentsRequest) (*ListRoleAssignmentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRoleAssignments not implemented")
+}
 func (UnimplementedAPIServer) mustEmbedUnimplementedAPIServer() {}
 func (UnimplementedAPIServer) testEmbeddedByValue()             {}
 
@@ -402,6 +510,24 @@ func _API_ListOrgRoles_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServer).ListOrgRoles(ctx, req.(*ListOrgRolesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _API_ListRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRolesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).ListRoles(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_ListRoles_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).ListRoles(ctx, req.(*ListRolesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -694,6 +820,96 @@ func _API_ListAuditLogs_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _API_UpdateOrgSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateOrgSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).UpdateOrgSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_UpdateOrgSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).UpdateOrgSettings(ctx, req.(*UpdateOrgSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _API_GetOrgSettings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrgSettingsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).GetOrgSettings(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_GetOrgSettings_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).GetOrgSettings(ctx, req.(*GetOrgSettingsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _API_AssignRoleAssignment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssignRoleAssignmentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).AssignRoleAssignment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_AssignRoleAssignment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).AssignRoleAssignment(ctx, req.(*AssignRoleAssignmentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _API_RemoveRoleAssignment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveRoleAssignmentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).RemoveRoleAssignment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_RemoveRoleAssignment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).RemoveRoleAssignment(ctx, req.(*RemoveRoleAssignmentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _API_ListRoleAssignments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRoleAssignmentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).ListRoleAssignments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_ListRoleAssignments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).ListRoleAssignments(ctx, req.(*ListRoleAssignmentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // API_ServiceDesc is the grpc.ServiceDesc for API service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -704,6 +920,10 @@ var API_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListOrgRoles",
 			Handler:    _API_ListOrgRoles_Handler,
+		},
+		{
+			MethodName: "ListRoles",
+			Handler:    _API_ListRoles_Handler,
 		},
 		{
 			MethodName: "ListUsers",
@@ -768,6 +988,26 @@ var API_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAuditLogs",
 			Handler:    _API_ListAuditLogs_Handler,
+		},
+		{
+			MethodName: "UpdateOrgSettings",
+			Handler:    _API_UpdateOrgSettings_Handler,
+		},
+		{
+			MethodName: "GetOrgSettings",
+			Handler:    _API_GetOrgSettings_Handler,
+		},
+		{
+			MethodName: "AssignRoleAssignment",
+			Handler:    _API_AssignRoleAssignment_Handler,
+		},
+		{
+			MethodName: "RemoveRoleAssignment",
+			Handler:    _API_RemoveRoleAssignment_Handler,
+		},
+		{
+			MethodName: "ListRoleAssignments",
+			Handler:    _API_ListRoleAssignments_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

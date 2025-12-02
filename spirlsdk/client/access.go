@@ -297,6 +297,100 @@ func (a accessAPI) UpdateServiceAccountKeyStatus(ctx context.Context, params acc
 	return &accesssdk.UpdateServiceAccountKeyStatusResult{ServiceAccountKey: serviceAccountKey}, nil
 }
 
+func (a accessAPI) AssignUserRealmRole(ctx context.Context, params accesssdk.AssignUserRealmRoleParams) (*accesssdk.AssignUserRealmRoleResult, error) {
+	req := &accessapi.AssignRoleAssignmentRequest{
+		Principal: &accessapi.AssignRoleAssignmentRequest_UserId{UserId: params.UserID},
+		RoleAssignment: &accessapi.AssignRoleAssignmentRequest_RealmRole{
+			RealmRole: &accessapi.RealmRoleAssignment{
+				RealmId: params.RealmID,
+				RoleId:  params.RoleID,
+			},
+		},
+	}
+
+	resp, err := a.client.AssignRoleAssignment(ctx, req)
+	if err != nil {
+		return nil, xerrors.Convert(err)
+	}
+
+	if resp.GetAssignmentId() == "" {
+		return nil, xerrors.UnexpectedResponseField("assignment_id")
+	}
+
+	return &accesssdk.AssignUserRealmRoleResult{AssignmentID: resp.AssignmentId}, nil
+}
+
+func (a accessAPI) AssignServiceAccountRealmRole(ctx context.Context, params accesssdk.AssignServiceAccountRealmRoleParams) (*accesssdk.AssignServiceAccountRealmRoleResult, error) {
+	req := &accessapi.AssignRoleAssignmentRequest{
+		Principal: &accessapi.AssignRoleAssignmentRequest_ServiceAccountId{ServiceAccountId: params.ServiceAccountID},
+		RoleAssignment: &accessapi.AssignRoleAssignmentRequest_RealmRole{
+			RealmRole: &accessapi.RealmRoleAssignment{
+				RealmId: params.RealmID,
+				RoleId:  params.RoleID,
+			},
+		},
+	}
+
+	resp, err := a.client.AssignRoleAssignment(ctx, req)
+	if err != nil {
+		return nil, xerrors.Convert(err)
+	}
+
+	if resp.GetAssignmentId() == "" {
+		return nil, xerrors.UnexpectedResponseField("assignment_id")
+	}
+
+	return &accesssdk.AssignServiceAccountRealmRoleResult{AssignmentID: resp.AssignmentId}, nil
+}
+
+func (a accessAPI) ListUserRealmRoleAssignments(ctx context.Context, params accesssdk.ListUserRealmRoleAssignmentsParams) (*accesssdk.ListUserRealmRoleAssignmentsResult, error) {
+	req := &accessapi.ListRoleAssignmentsRequest{
+		Principal: &accessapi.ListRoleAssignmentsRequest_UserId{UserId: params.UserID},
+	}
+
+	resp, err := a.client.ListRoleAssignments(ctx, req)
+	if err != nil {
+		return nil, xerrors.Convert(err)
+	}
+
+	assignments, err := convertSlice(resp.Assignments, roleAssignmentFromAPI)
+	if err != nil {
+		return nil, err
+	}
+
+	return &accesssdk.ListUserRealmRoleAssignmentsResult{Assignments: assignments}, nil
+}
+
+func (a accessAPI) ListServiceAccountRealmRoleAssignments(ctx context.Context, params accesssdk.ListServiceAccountRealmRoleAssignmentsParams) (*accesssdk.ListServiceAccountRealmRoleAssignmentsResult, error) {
+	req := &accessapi.ListRoleAssignmentsRequest{
+		Principal: &accessapi.ListRoleAssignmentsRequest_ServiceAccountId{ServiceAccountId: params.ServiceAccountID},
+	}
+
+	resp, err := a.client.ListRoleAssignments(ctx, req)
+	if err != nil {
+		return nil, xerrors.Convert(err)
+	}
+
+	assignments, err := convertSlice(resp.Assignments, roleAssignmentFromAPI)
+	if err != nil {
+		return nil, err
+	}
+
+	return &accesssdk.ListServiceAccountRealmRoleAssignmentsResult{Assignments: assignments}, nil
+}
+
+func (a accessAPI) RemoveRealmRoleAssignment(ctx context.Context, params accesssdk.RemoveRealmRoleAssignmentParams) (*accesssdk.RemoveRealmRoleAssignmentResult, error) {
+	req := &accessapi.RemoveRoleAssignmentRequest{
+		AssignmentId: params.AssignmentID,
+	}
+
+	if _, err := a.client.RemoveRoleAssignment(ctx, req); err != nil {
+		return nil, xerrors.Convert(err)
+	}
+
+	return &accesssdk.RemoveRealmRoleAssignmentResult{}, nil
+}
+
 func (a accessAPI) ListAuditLogs(ctx context.Context, params accesssdk.ListAuditLogsParams) (*accesssdk.ListAuditLogsResult, error) {
 	filter := &accessapi.AuditLogFilter{
 		ByTrustDomainId:   optionalValue1(params.Filter.TrustDomainID, ptrOf),
@@ -334,6 +428,72 @@ func (a accessAPI) ListAuditLogs(ctx context.Context, params accesssdk.ListAudit
 	return &accesssdk.ListAuditLogsResult{
 		Page:      spirlsdk.PageResult{NextToken: resp.NextPageToken},
 		AuditLogs: logs,
+	}, nil
+}
+
+func roleAssignmentFromAPI(in *accessapi.RoleAssignment) (accesssdk.RoleAssignment, error) {
+	if in == nil {
+		return accesssdk.RoleAssignment{}, xerrors.UnexpectedResponseField("role_assignment")
+	}
+	if in.Id == "" {
+		return accesssdk.RoleAssignment{}, xerrors.UnexpectedResponseField("role_assignment.id")
+	}
+
+	principal, err := roleAssignmentPrincipalFromAPI(in.GetPrincipal())
+	if err != nil {
+		return accesssdk.RoleAssignment{}, err
+	}
+
+	realmRole, err := realmRoleAssignmentFromAPI(in.GetRealmRole())
+	if err != nil {
+		return accesssdk.RoleAssignment{}, err
+	}
+
+	if in.CreatedAt == nil {
+		return accesssdk.RoleAssignment{}, xerrors.UnexpectedResponseField("role_assignment.created_at")
+	}
+
+	return accesssdk.RoleAssignment{
+		ID:        in.Id,
+		Principal: principal,
+		RealmRole: realmRole,
+		CreatedAt: timeFromAPI(in.CreatedAt),
+	}, nil
+}
+
+func roleAssignmentPrincipalFromAPI(in any) (accesssdk.RoleAssignmentPrincipal, error) {
+	switch principal := in.(type) {
+	case *accessapi.RoleAssignment_UserId:
+		if principal.UserId == "" {
+			return nil, xerrors.UnexpectedResponseField("role_assignment.principal.user_id")
+		}
+		return accesssdk.UserRoleAssignmentPrincipal{UserID: principal.UserId}, nil
+	case *accessapi.RoleAssignment_ServiceAccountId:
+		if principal.ServiceAccountId == "" {
+			return nil, xerrors.UnexpectedResponseField("role_assignment.principal.service_account_id")
+		}
+		return accesssdk.ServiceAccountRoleAssignmentPrincipal{ServiceAccountID: principal.ServiceAccountId}, nil
+	case nil:
+		return nil, xerrors.UnexpectedResponseField("role_assignment.principal")
+	default:
+		return nil, xerrors.UnexpectedResponseType("role_assignment.principal", principal)
+	}
+}
+
+func realmRoleAssignmentFromAPI(in *accessapi.RealmRoleAssignment) (accesssdk.RealmRoleAssignment, error) {
+	if in == nil {
+		return accesssdk.RealmRoleAssignment{}, xerrors.UnexpectedResponseField("realm_role_assignment")
+	}
+	if in.RealmId == "" {
+		return accesssdk.RealmRoleAssignment{}, xerrors.UnexpectedResponseField("realm_role_assignment.realm_id")
+	}
+	if in.RoleId == "" {
+		return accesssdk.RealmRoleAssignment{}, xerrors.UnexpectedResponseField("realm_role_assignment.role_id")
+	}
+
+	return accesssdk.RealmRoleAssignment{
+		RealmID: in.RealmId,
+		RoleID:  in.RoleId,
 	}, nil
 }
 

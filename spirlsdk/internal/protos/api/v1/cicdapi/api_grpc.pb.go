@@ -19,10 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	API_CreateCICDProfile_FullMethodName  = "/com.spirl.api.v1.cicd.API/CreateCICDProfile"
-	API_ListCICDProfiles_FullMethodName   = "/com.spirl.api.v1.cicd.API/ListCICDProfiles"
-	API_GetCICDProfileInfo_FullMethodName = "/com.spirl.api.v1.cicd.API/GetCICDProfileInfo"
-	API_DeleteCICDProfile_FullMethodName  = "/com.spirl.api.v1.cicd.API/DeleteCICDProfile"
+	API_CreateCICDProfile_FullMethodName    = "/com.spirl.api.v1.cicd.API/CreateCICDProfile"
+	API_ListCICDProfiles_FullMethodName     = "/com.spirl.api.v1.cicd.API/ListCICDProfiles"
+	API_DeleteCICDProfile_FullMethodName    = "/com.spirl.api.v1.cicd.API/DeleteCICDProfile"
+	API_LinkCICDProfile_FullMethodName      = "/com.spirl.api.v1.cicd.API/LinkCICDProfile"
+	API_UnlinkCICDProfile_FullMethodName    = "/com.spirl.api.v1.cicd.API/UnlinkCICDProfile"
+	API_ListCICDProfileLinks_FullMethodName = "/com.spirl.api.v1.cicd.API/ListCICDProfileLinks"
 )
 
 // APIClient is the client API for API service.
@@ -33,10 +35,11 @@ type APIClient interface {
 	CreateCICDProfile(ctx context.Context, in *CreateCICDProfileRequest, opts ...grpc.CallOption) (*CreateCICDProfileResponse, error)
 	// Lists CI/CD Profiles
 	ListCICDProfiles(ctx context.Context, in *ListCICDProfilesRequest, opts ...grpc.CallOption) (*ListCICDProfilesResponse, error)
-	// Returns the claims, jwks and issuer for all profiles
-	GetCICDProfileInfo(ctx context.Context, in *GetCICDProfileInfoRequest, opts ...grpc.CallOption) (*GetCICDProfileInfoResponse, error)
 	// Deletes the CI/CD profile with the given name
 	DeleteCICDProfile(ctx context.Context, in *DeleteCICDProfileRequest, opts ...grpc.CallOption) (*DeleteCICDProfileResponse, error)
+	LinkCICDProfile(ctx context.Context, in *LinkCICDProfileRequest, opts ...grpc.CallOption) (*LinkCICDProfileResponse, error)
+	UnlinkCICDProfile(ctx context.Context, in *UnlinkCICDProfileRequest, opts ...grpc.CallOption) (*UnlinkCICDProfileResponse, error)
+	ListCICDProfileLinks(ctx context.Context, in *ListCICDProfileLinksRequest, opts ...grpc.CallOption) (*ListCICDProfileLinksResponse, error)
 }
 
 type aPIClient struct {
@@ -67,20 +70,40 @@ func (c *aPIClient) ListCICDProfiles(ctx context.Context, in *ListCICDProfilesRe
 	return out, nil
 }
 
-func (c *aPIClient) GetCICDProfileInfo(ctx context.Context, in *GetCICDProfileInfoRequest, opts ...grpc.CallOption) (*GetCICDProfileInfoResponse, error) {
+func (c *aPIClient) DeleteCICDProfile(ctx context.Context, in *DeleteCICDProfileRequest, opts ...grpc.CallOption) (*DeleteCICDProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCICDProfileInfoResponse)
-	err := c.cc.Invoke(ctx, API_GetCICDProfileInfo_FullMethodName, in, out, cOpts...)
+	out := new(DeleteCICDProfileResponse)
+	err := c.cc.Invoke(ctx, API_DeleteCICDProfile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *aPIClient) DeleteCICDProfile(ctx context.Context, in *DeleteCICDProfileRequest, opts ...grpc.CallOption) (*DeleteCICDProfileResponse, error) {
+func (c *aPIClient) LinkCICDProfile(ctx context.Context, in *LinkCICDProfileRequest, opts ...grpc.CallOption) (*LinkCICDProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteCICDProfileResponse)
-	err := c.cc.Invoke(ctx, API_DeleteCICDProfile_FullMethodName, in, out, cOpts...)
+	out := new(LinkCICDProfileResponse)
+	err := c.cc.Invoke(ctx, API_LinkCICDProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIClient) UnlinkCICDProfile(ctx context.Context, in *UnlinkCICDProfileRequest, opts ...grpc.CallOption) (*UnlinkCICDProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UnlinkCICDProfileResponse)
+	err := c.cc.Invoke(ctx, API_UnlinkCICDProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *aPIClient) ListCICDProfileLinks(ctx context.Context, in *ListCICDProfileLinksRequest, opts ...grpc.CallOption) (*ListCICDProfileLinksResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListCICDProfileLinksResponse)
+	err := c.cc.Invoke(ctx, API_ListCICDProfileLinks_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -95,10 +118,11 @@ type APIServer interface {
 	CreateCICDProfile(context.Context, *CreateCICDProfileRequest) (*CreateCICDProfileResponse, error)
 	// Lists CI/CD Profiles
 	ListCICDProfiles(context.Context, *ListCICDProfilesRequest) (*ListCICDProfilesResponse, error)
-	// Returns the claims, jwks and issuer for all profiles
-	GetCICDProfileInfo(context.Context, *GetCICDProfileInfoRequest) (*GetCICDProfileInfoResponse, error)
 	// Deletes the CI/CD profile with the given name
 	DeleteCICDProfile(context.Context, *DeleteCICDProfileRequest) (*DeleteCICDProfileResponse, error)
+	LinkCICDProfile(context.Context, *LinkCICDProfileRequest) (*LinkCICDProfileResponse, error)
+	UnlinkCICDProfile(context.Context, *UnlinkCICDProfileRequest) (*UnlinkCICDProfileResponse, error)
+	ListCICDProfileLinks(context.Context, *ListCICDProfileLinksRequest) (*ListCICDProfileLinksResponse, error)
 	mustEmbedUnimplementedAPIServer()
 }
 
@@ -115,11 +139,17 @@ func (UnimplementedAPIServer) CreateCICDProfile(context.Context, *CreateCICDProf
 func (UnimplementedAPIServer) ListCICDProfiles(context.Context, *ListCICDProfilesRequest) (*ListCICDProfilesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCICDProfiles not implemented")
 }
-func (UnimplementedAPIServer) GetCICDProfileInfo(context.Context, *GetCICDProfileInfoRequest) (*GetCICDProfileInfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCICDProfileInfo not implemented")
-}
 func (UnimplementedAPIServer) DeleteCICDProfile(context.Context, *DeleteCICDProfileRequest) (*DeleteCICDProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCICDProfile not implemented")
+}
+func (UnimplementedAPIServer) LinkCICDProfile(context.Context, *LinkCICDProfileRequest) (*LinkCICDProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LinkCICDProfile not implemented")
+}
+func (UnimplementedAPIServer) UnlinkCICDProfile(context.Context, *UnlinkCICDProfileRequest) (*UnlinkCICDProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnlinkCICDProfile not implemented")
+}
+func (UnimplementedAPIServer) ListCICDProfileLinks(context.Context, *ListCICDProfileLinksRequest) (*ListCICDProfileLinksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCICDProfileLinks not implemented")
 }
 func (UnimplementedAPIServer) mustEmbedUnimplementedAPIServer() {}
 func (UnimplementedAPIServer) testEmbeddedByValue()             {}
@@ -178,24 +208,6 @@ func _API_ListCICDProfiles_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _API_GetCICDProfileInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCICDProfileInfoRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(APIServer).GetCICDProfileInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: API_GetCICDProfileInfo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(APIServer).GetCICDProfileInfo(ctx, req.(*GetCICDProfileInfoRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _API_DeleteCICDProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteCICDProfileRequest)
 	if err := dec(in); err != nil {
@@ -210,6 +222,60 @@ func _API_DeleteCICDProfile_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServer).DeleteCICDProfile(ctx, req.(*DeleteCICDProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _API_LinkCICDProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LinkCICDProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).LinkCICDProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_LinkCICDProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).LinkCICDProfile(ctx, req.(*LinkCICDProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _API_UnlinkCICDProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnlinkCICDProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).UnlinkCICDProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_UnlinkCICDProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).UnlinkCICDProfile(ctx, req.(*UnlinkCICDProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _API_ListCICDProfileLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCICDProfileLinksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(APIServer).ListCICDProfileLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: API_ListCICDProfileLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(APIServer).ListCICDProfileLinks(ctx, req.(*ListCICDProfileLinksRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -230,12 +296,20 @@ var API_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _API_ListCICDProfiles_Handler,
 		},
 		{
-			MethodName: "GetCICDProfileInfo",
-			Handler:    _API_GetCICDProfileInfo_Handler,
-		},
-		{
 			MethodName: "DeleteCICDProfile",
 			Handler:    _API_DeleteCICDProfile_Handler,
+		},
+		{
+			MethodName: "LinkCICDProfile",
+			Handler:    _API_LinkCICDProfile_Handler,
+		},
+		{
+			MethodName: "UnlinkCICDProfile",
+			Handler:    _API_UnlinkCICDProfile_Handler,
+		},
+		{
+			MethodName: "ListCICDProfileLinks",
+			Handler:    _API_ListCICDProfileLinks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

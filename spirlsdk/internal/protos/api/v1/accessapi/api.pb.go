@@ -124,6 +124,52 @@ func (AuditLogActorType) EnumDescriptor() ([]byte, []int) {
 	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{1}
 }
 
+type RoleType int32
+
+const (
+	RoleType_ROLE_TYPE_UNSPECIFIED RoleType = 0
+	RoleType_ROLE_TYPE_REALM       RoleType = 1
+)
+
+// Enum value maps for RoleType.
+var (
+	RoleType_name = map[int32]string{
+		0: "ROLE_TYPE_UNSPECIFIED",
+		1: "ROLE_TYPE_REALM",
+	}
+	RoleType_value = map[string]int32{
+		"ROLE_TYPE_UNSPECIFIED": 0,
+		"ROLE_TYPE_REALM":       1,
+	}
+)
+
+func (x RoleType) Enum() *RoleType {
+	p := new(RoleType)
+	*p = x
+	return p
+}
+
+func (x RoleType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (RoleType) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_v1_accessapi_api_proto_enumTypes[2].Descriptor()
+}
+
+func (RoleType) Type() protoreflect.EnumType {
+	return &file_api_v1_accessapi_api_proto_enumTypes[2]
+}
+
+func (x RoleType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use RoleType.Descriptor instead.
+func (RoleType) EnumDescriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{2}
+}
+
 type ListAuditLogsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -3004,6 +3050,1002 @@ func (x *PKIXPublicKey) GetData() []byte {
 	return nil
 }
 
+type UpdateOrgSettingsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Whether Assume Org is enabled for the organization.
+	AssumeOrgEnabled bool `protobuf:"varint,1,opt,name=assume_org_enabled,json=assumeOrgEnabled,proto3" json:"assume_org_enabled,omitempty"`
+	// The expiration time for Assume Org functionality. If not set, Assume Org is enabled indefinitely if assume_org_enabled=true.
+	AssumeOrgExpirationTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=assume_org_expiration_time,json=assumeOrgExpirationTime,proto3" json:"assume_org_expiration_time,omitempty"`
+}
+
+func (x *UpdateOrgSettingsRequest) Reset() {
+	*x = UpdateOrgSettingsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[48]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateOrgSettingsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateOrgSettingsRequest) ProtoMessage() {}
+
+func (x *UpdateOrgSettingsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[48]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateOrgSettingsRequest.ProtoReflect.Descriptor instead.
+func (*UpdateOrgSettingsRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{48}
+}
+
+func (x *UpdateOrgSettingsRequest) GetAssumeOrgEnabled() bool {
+	if x != nil {
+		return x.AssumeOrgEnabled
+	}
+	return false
+}
+
+func (x *UpdateOrgSettingsRequest) GetAssumeOrgExpirationTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.AssumeOrgExpirationTime
+	}
+	return nil
+}
+
+type UpdateOrgSettingsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The updated organization settings.
+	OrgSettings *OrgSettings `protobuf:"bytes,1,opt,name=org_settings,json=orgSettings,proto3" json:"org_settings,omitempty"`
+}
+
+func (x *UpdateOrgSettingsResponse) Reset() {
+	*x = UpdateOrgSettingsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[49]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateOrgSettingsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateOrgSettingsResponse) ProtoMessage() {}
+
+func (x *UpdateOrgSettingsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[49]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateOrgSettingsResponse.ProtoReflect.Descriptor instead.
+func (*UpdateOrgSettingsResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{49}
+}
+
+func (x *UpdateOrgSettingsResponse) GetOrgSettings() *OrgSettings {
+	if x != nil {
+		return x.OrgSettings
+	}
+	return nil
+}
+
+type GetOrgSettingsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetOrgSettingsRequest) Reset() {
+	*x = GetOrgSettingsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[50]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetOrgSettingsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrgSettingsRequest) ProtoMessage() {}
+
+func (x *GetOrgSettingsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[50]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrgSettingsRequest.ProtoReflect.Descriptor instead.
+func (*GetOrgSettingsRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{50}
+}
+
+type GetOrgSettingsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The organization settings.
+	OrgSettings *OrgSettings `protobuf:"bytes,1,opt,name=org_settings,json=orgSettings,proto3" json:"org_settings,omitempty"`
+}
+
+func (x *GetOrgSettingsResponse) Reset() {
+	*x = GetOrgSettingsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[51]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetOrgSettingsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetOrgSettingsResponse) ProtoMessage() {}
+
+func (x *GetOrgSettingsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[51]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetOrgSettingsResponse.ProtoReflect.Descriptor instead.
+func (*GetOrgSettingsResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{51}
+}
+
+func (x *GetOrgSettingsResponse) GetOrgSettings() *OrgSettings {
+	if x != nil {
+		return x.OrgSettings
+	}
+	return nil
+}
+
+type OrgSettings struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// When the settings were created.
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	// When the settings were last updated.
+	UpdatedAt *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	// Whether Assume Org is enabled for the organization.
+	AssumeOrgEnabled bool `protobuf:"varint,3,opt,name=assume_org_enabled,json=assumeOrgEnabled,proto3" json:"assume_org_enabled,omitempty"`
+	// The expiration time for Assume Org functionality. If not set, Assume Org is enabled indefinitely if assume_org_enabled=true.
+	AssumeOrgExpirationTime *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=assume_org_expiration_time,json=assumeOrgExpirationTime,proto3" json:"assume_org_expiration_time,omitempty"`
+}
+
+func (x *OrgSettings) Reset() {
+	*x = OrgSettings{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[52]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *OrgSettings) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrgSettings) ProtoMessage() {}
+
+func (x *OrgSettings) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[52]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrgSettings.ProtoReflect.Descriptor instead.
+func (*OrgSettings) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{52}
+}
+
+func (x *OrgSettings) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *OrgSettings) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
+func (x *OrgSettings) GetAssumeOrgEnabled() bool {
+	if x != nil {
+		return x.AssumeOrgEnabled
+	}
+	return false
+}
+
+func (x *OrgSettings) GetAssumeOrgExpirationTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.AssumeOrgExpirationTime
+	}
+	return nil
+}
+
+type AssignRoleAssignmentRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Required. The principal (user or service account) to assign the role to.
+	//
+	// Types that are assignable to Principal:
+	//
+	//	*AssignRoleAssignmentRequest_ServiceAccountId
+	//	*AssignRoleAssignmentRequest_UserId
+	Principal isAssignRoleAssignmentRequest_Principal `protobuf_oneof:"principal"`
+	// Required. The role assignment (type-safe via oneof).
+	//
+	// Types that are assignable to RoleAssignment:
+	//
+	//	*AssignRoleAssignmentRequest_RealmRole
+	RoleAssignment isAssignRoleAssignmentRequest_RoleAssignment `protobuf_oneof:"role_assignment"`
+}
+
+func (x *AssignRoleAssignmentRequest) Reset() {
+	*x = AssignRoleAssignmentRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[53]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AssignRoleAssignmentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AssignRoleAssignmentRequest) ProtoMessage() {}
+
+func (x *AssignRoleAssignmentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[53]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AssignRoleAssignmentRequest.ProtoReflect.Descriptor instead.
+func (*AssignRoleAssignmentRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{53}
+}
+
+func (m *AssignRoleAssignmentRequest) GetPrincipal() isAssignRoleAssignmentRequest_Principal {
+	if m != nil {
+		return m.Principal
+	}
+	return nil
+}
+
+func (x *AssignRoleAssignmentRequest) GetServiceAccountId() string {
+	if x, ok := x.GetPrincipal().(*AssignRoleAssignmentRequest_ServiceAccountId); ok {
+		return x.ServiceAccountId
+	}
+	return ""
+}
+
+func (x *AssignRoleAssignmentRequest) GetUserId() string {
+	if x, ok := x.GetPrincipal().(*AssignRoleAssignmentRequest_UserId); ok {
+		return x.UserId
+	}
+	return ""
+}
+
+func (m *AssignRoleAssignmentRequest) GetRoleAssignment() isAssignRoleAssignmentRequest_RoleAssignment {
+	if m != nil {
+		return m.RoleAssignment
+	}
+	return nil
+}
+
+func (x *AssignRoleAssignmentRequest) GetRealmRole() *RealmRoleAssignment {
+	if x, ok := x.GetRoleAssignment().(*AssignRoleAssignmentRequest_RealmRole); ok {
+		return x.RealmRole
+	}
+	return nil
+}
+
+type isAssignRoleAssignmentRequest_Principal interface {
+	isAssignRoleAssignmentRequest_Principal()
+}
+
+type AssignRoleAssignmentRequest_ServiceAccountId struct {
+	// Service account ID to assign the role to
+	ServiceAccountId string `protobuf:"bytes,3,opt,name=service_account_id,json=serviceAccountId,proto3,oneof"`
+}
+
+type AssignRoleAssignmentRequest_UserId struct {
+	// User ID to assign the role to
+	UserId string `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3,oneof"`
+}
+
+func (*AssignRoleAssignmentRequest_ServiceAccountId) isAssignRoleAssignmentRequest_Principal() {}
+
+func (*AssignRoleAssignmentRequest_UserId) isAssignRoleAssignmentRequest_Principal() {}
+
+type isAssignRoleAssignmentRequest_RoleAssignment interface {
+	isAssignRoleAssignmentRequest_RoleAssignment()
+}
+
+type AssignRoleAssignmentRequest_RealmRole struct {
+	// Realm role assignment
+	RealmRole *RealmRoleAssignment `protobuf:"bytes,2,opt,name=realm_role,json=realmRole,proto3,oneof"`
+}
+
+func (*AssignRoleAssignmentRequest_RealmRole) isAssignRoleAssignmentRequest_RoleAssignment() {}
+
+type AssignRoleAssignmentResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The ID of the created role assignment.
+	AssignmentId string `protobuf:"bytes,1,opt,name=assignment_id,json=assignmentId,proto3" json:"assignment_id,omitempty"`
+}
+
+func (x *AssignRoleAssignmentResponse) Reset() {
+	*x = AssignRoleAssignmentResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[54]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AssignRoleAssignmentResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AssignRoleAssignmentResponse) ProtoMessage() {}
+
+func (x *AssignRoleAssignmentResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[54]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AssignRoleAssignmentResponse.ProtoReflect.Descriptor instead.
+func (*AssignRoleAssignmentResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{54}
+}
+
+func (x *AssignRoleAssignmentResponse) GetAssignmentId() string {
+	if x != nil {
+		return x.AssignmentId
+	}
+	return ""
+}
+
+type RemoveRoleAssignmentRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Required. The ID of the role assignment to remove.
+	AssignmentId string `protobuf:"bytes,1,opt,name=assignment_id,json=assignmentId,proto3" json:"assignment_id,omitempty"`
+}
+
+func (x *RemoveRoleAssignmentRequest) Reset() {
+	*x = RemoveRoleAssignmentRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[55]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RemoveRoleAssignmentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveRoleAssignmentRequest) ProtoMessage() {}
+
+func (x *RemoveRoleAssignmentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[55]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveRoleAssignmentRequest.ProtoReflect.Descriptor instead.
+func (*RemoveRoleAssignmentRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{55}
+}
+
+func (x *RemoveRoleAssignmentRequest) GetAssignmentId() string {
+	if x != nil {
+		return x.AssignmentId
+	}
+	return ""
+}
+
+type RemoveRoleAssignmentResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *RemoveRoleAssignmentResponse) Reset() {
+	*x = RemoveRoleAssignmentResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[56]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RemoveRoleAssignmentResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveRoleAssignmentResponse) ProtoMessage() {}
+
+func (x *RemoveRoleAssignmentResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[56]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveRoleAssignmentResponse.ProtoReflect.Descriptor instead.
+func (*RemoveRoleAssignmentResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{56}
+}
+
+type ListRoleAssignmentsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Required. The principal (user or service account) to list role assignments for.
+	//
+	// Types that are assignable to Principal:
+	//
+	//	*ListRoleAssignmentsRequest_ServiceAccountId
+	//	*ListRoleAssignmentsRequest_UserId
+	Principal isListRoleAssignmentsRequest_Principal `protobuf_oneof:"principal"`
+}
+
+func (x *ListRoleAssignmentsRequest) Reset() {
+	*x = ListRoleAssignmentsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[57]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListRoleAssignmentsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRoleAssignmentsRequest) ProtoMessage() {}
+
+func (x *ListRoleAssignmentsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[57]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRoleAssignmentsRequest.ProtoReflect.Descriptor instead.
+func (*ListRoleAssignmentsRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{57}
+}
+
+func (m *ListRoleAssignmentsRequest) GetPrincipal() isListRoleAssignmentsRequest_Principal {
+	if m != nil {
+		return m.Principal
+	}
+	return nil
+}
+
+func (x *ListRoleAssignmentsRequest) GetServiceAccountId() string {
+	if x, ok := x.GetPrincipal().(*ListRoleAssignmentsRequest_ServiceAccountId); ok {
+		return x.ServiceAccountId
+	}
+	return ""
+}
+
+func (x *ListRoleAssignmentsRequest) GetUserId() string {
+	if x, ok := x.GetPrincipal().(*ListRoleAssignmentsRequest_UserId); ok {
+		return x.UserId
+	}
+	return ""
+}
+
+type isListRoleAssignmentsRequest_Principal interface {
+	isListRoleAssignmentsRequest_Principal()
+}
+
+type ListRoleAssignmentsRequest_ServiceAccountId struct {
+	// Service account ID to list role assignments for
+	ServiceAccountId string `protobuf:"bytes,2,opt,name=service_account_id,json=serviceAccountId,proto3,oneof"`
+}
+
+type ListRoleAssignmentsRequest_UserId struct {
+	// User ID to list role assignments for
+	UserId string `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3,oneof"`
+}
+
+func (*ListRoleAssignmentsRequest_ServiceAccountId) isListRoleAssignmentsRequest_Principal() {}
+
+func (*ListRoleAssignmentsRequest_UserId) isListRoleAssignmentsRequest_Principal() {}
+
+type ListRoleAssignmentsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The list of role assignments.
+	Assignments []*RoleAssignment `protobuf:"bytes,1,rep,name=assignments,proto3" json:"assignments,omitempty"`
+}
+
+func (x *ListRoleAssignmentsResponse) Reset() {
+	*x = ListRoleAssignmentsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[58]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListRoleAssignmentsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRoleAssignmentsResponse) ProtoMessage() {}
+
+func (x *ListRoleAssignmentsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[58]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRoleAssignmentsResponse.ProtoReflect.Descriptor instead.
+func (*ListRoleAssignmentsResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{58}
+}
+
+func (x *ListRoleAssignmentsResponse) GetAssignments() []*RoleAssignment {
+	if x != nil {
+		return x.Assignments
+	}
+	return nil
+}
+
+// Represents a realm role assignment.
+type RealmRoleAssignment struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Required. The realm ID.
+	RealmId string `protobuf:"bytes,1,opt,name=realm_id,json=realmId,proto3" json:"realm_id,omitempty"`
+	// Required. The realm role ID (rr-* format).
+	RoleId string `protobuf:"bytes,2,opt,name=role_id,json=roleId,proto3" json:"role_id,omitempty"`
+}
+
+func (x *RealmRoleAssignment) Reset() {
+	*x = RealmRoleAssignment{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[59]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RealmRoleAssignment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RealmRoleAssignment) ProtoMessage() {}
+
+func (x *RealmRoleAssignment) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[59]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RealmRoleAssignment.ProtoReflect.Descriptor instead.
+func (*RealmRoleAssignment) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{59}
+}
+
+func (x *RealmRoleAssignment) GetRealmId() string {
+	if x != nil {
+		return x.RealmId
+	}
+	return ""
+}
+
+func (x *RealmRoleAssignment) GetRoleId() string {
+	if x != nil {
+		return x.RoleId
+	}
+	return ""
+}
+
+// Represents a role assignment to a user or service account.
+type RoleAssignment struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The assignment ID.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The principal (user or service account) this assignment belongs to.
+	//
+	// Types that are assignable to Principal:
+	//
+	//	*RoleAssignment_ServiceAccountId
+	//	*RoleAssignment_UserId
+	Principal isRoleAssignment_Principal `protobuf_oneof:"principal"`
+	// When the assignment was created.
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	// The role assignment details (type-safe via oneof).
+	//
+	// Types that are assignable to Assignment:
+	//
+	//	*RoleAssignment_RealmRole
+	Assignment isRoleAssignment_Assignment `protobuf_oneof:"assignment"`
+}
+
+func (x *RoleAssignment) Reset() {
+	*x = RoleAssignment{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[60]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RoleAssignment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RoleAssignment) ProtoMessage() {}
+
+func (x *RoleAssignment) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[60]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RoleAssignment.ProtoReflect.Descriptor instead.
+func (*RoleAssignment) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{60}
+}
+
+func (x *RoleAssignment) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (m *RoleAssignment) GetPrincipal() isRoleAssignment_Principal {
+	if m != nil {
+		return m.Principal
+	}
+	return nil
+}
+
+func (x *RoleAssignment) GetServiceAccountId() string {
+	if x, ok := x.GetPrincipal().(*RoleAssignment_ServiceAccountId); ok {
+		return x.ServiceAccountId
+	}
+	return ""
+}
+
+func (x *RoleAssignment) GetUserId() string {
+	if x, ok := x.GetPrincipal().(*RoleAssignment_UserId); ok {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *RoleAssignment) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (m *RoleAssignment) GetAssignment() isRoleAssignment_Assignment {
+	if m != nil {
+		return m.Assignment
+	}
+	return nil
+}
+
+func (x *RoleAssignment) GetRealmRole() *RealmRoleAssignment {
+	if x, ok := x.GetAssignment().(*RoleAssignment_RealmRole); ok {
+		return x.RealmRole
+	}
+	return nil
+}
+
+type isRoleAssignment_Principal interface {
+	isRoleAssignment_Principal()
+}
+
+type RoleAssignment_ServiceAccountId struct {
+	// Service account ID this assignment belongs to
+	ServiceAccountId string `protobuf:"bytes,5,opt,name=service_account_id,json=serviceAccountId,proto3,oneof"`
+}
+
+type RoleAssignment_UserId struct {
+	// User ID this assignment belongs to
+	UserId string `protobuf:"bytes,6,opt,name=user_id,json=userId,proto3,oneof"`
+}
+
+func (*RoleAssignment_ServiceAccountId) isRoleAssignment_Principal() {}
+
+func (*RoleAssignment_UserId) isRoleAssignment_Principal() {}
+
+type isRoleAssignment_Assignment interface {
+	isRoleAssignment_Assignment()
+}
+
+type RoleAssignment_RealmRole struct {
+	// Realm role assignment
+	RealmRole *RealmRoleAssignment `protobuf:"bytes,4,opt,name=realm_role,json=realmRole,proto3,oneof"`
+}
+
+func (*RoleAssignment_RealmRole) isRoleAssignment_Assignment() {}
+
+type ListRolesRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Required. The type of roles to list.
+	RoleType RoleType `protobuf:"varint,1,opt,name=role_type,json=roleType,proto3,enum=com.spirl.api.v1.access.RoleType" json:"role_type,omitempty"`
+}
+
+func (x *ListRolesRequest) Reset() {
+	*x = ListRolesRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[61]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListRolesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRolesRequest) ProtoMessage() {}
+
+func (x *ListRolesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[61]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRolesRequest.ProtoReflect.Descriptor instead.
+func (*ListRolesRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{61}
+}
+
+func (x *ListRolesRequest) GetRoleType() RoleType {
+	if x != nil {
+		return x.RoleType
+	}
+	return RoleType_ROLE_TYPE_UNSPECIFIED
+}
+
+type ListRolesResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The list of roles.
+	Roles []*Role `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
+}
+
+func (x *ListRolesResponse) Reset() {
+	*x = ListRolesResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[62]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListRolesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRolesResponse) ProtoMessage() {}
+
+func (x *ListRolesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[62]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRolesResponse.ProtoReflect.Descriptor instead.
+func (*ListRolesResponse) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{62}
+}
+
+func (x *ListRolesResponse) GetRoles() []*Role {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
+// Represents a role.
+type Role struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// The role ID.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The role name.
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *Role) Reset() {
+	*x = Role{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_accessapi_api_proto_msgTypes[63]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Role) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Role) ProtoMessage() {}
+
+func (x *Role) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_accessapi_api_proto_msgTypes[63]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Role.ProtoReflect.Descriptor instead.
+func (*Role) Descriptor() ([]byte, []int) {
+	return file_api_v1_accessapi_api_proto_rawDescGZIP(), []int{63}
+}
+
+func (x *Role) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Role) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 var File_api_v1_accessapi_api_proto protoreflect.FileDescriptor
 
 var file_api_v1_accessapi_api_proto_rawDesc = []byte{
@@ -3376,7 +4418,122 @@ var file_api_v1_accessapi_api_proto_rawDesc = []byte{
 	0x64, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x05, 0x65, 0x6d, 0x61, 0x69, 0x6c, 0x22, 0x23, 0x0a, 0x0d, 0x50, 0x4b, 0x49, 0x58, 0x50,
 	0x75, 0x62, 0x6c, 0x69, 0x63, 0x4b, 0x65, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x2a, 0x69, 0x0a, 0x0e,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x22, 0xa1, 0x01, 0x0a,
+	0x18, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e,
+	0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2c, 0x0a, 0x12, 0x61, 0x73, 0x73,
+	0x75, 0x6d, 0x65, 0x5f, 0x6f, 0x72, 0x67, 0x5f, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x10, 0x61, 0x73, 0x73, 0x75, 0x6d, 0x65, 0x4f, 0x72, 0x67,
+	0x45, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x12, 0x57, 0x0a, 0x1a, 0x61, 0x73, 0x73, 0x75, 0x6d,
+	0x65, 0x5f, 0x6f, 0x72, 0x67, 0x5f, 0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69,
+	0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x17, 0x61, 0x73, 0x73, 0x75, 0x6d, 0x65, 0x4f,
+	0x72, 0x67, 0x45, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x69, 0x6d, 0x65,
+	0x22, 0x64, 0x0a, 0x19, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74,
+	0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x47, 0x0a,
+	0x0c, 0x6f, 0x72, 0x67, 0x5f, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x4f, 0x72,
+	0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x0b, 0x6f, 0x72, 0x67, 0x53, 0x65,
+	0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x22, 0x17, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x67,
+	0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22,
+	0x61, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x47, 0x0a, 0x0c, 0x6f, 0x72, 0x67,
+	0x5f, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x24, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e,
+	0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74,
+	0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x0b, 0x6f, 0x72, 0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e,
+	0x67, 0x73, 0x22, 0x8a, 0x02, 0x0a, 0x0b, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e,
+	0x67, 0x73, 0x12, 0x39, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61, 0x74,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
+	0x6d, 0x70, 0x52, 0x09, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x12, 0x39, 0x0a,
+	0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x09, 0x75,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x12, 0x2c, 0x0a, 0x12, 0x61, 0x73, 0x73, 0x75,
+	0x6d, 0x65, 0x5f, 0x6f, 0x72, 0x67, 0x5f, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x08, 0x52, 0x10, 0x61, 0x73, 0x73, 0x75, 0x6d, 0x65, 0x4f, 0x72, 0x67, 0x45,
+	0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x12, 0x57, 0x0a, 0x1a, 0x61, 0x73, 0x73, 0x75, 0x6d, 0x65,
+	0x5f, 0x6f, 0x72, 0x67, 0x5f, 0x65, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f,
+	0x74, 0x69, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f,
+	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d,
+	0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x17, 0x61, 0x73, 0x73, 0x75, 0x6d, 0x65, 0x4f, 0x72,
+	0x67, 0x45, 0x78, 0x70, 0x69, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x69, 0x6d, 0x65, 0x22,
+	0xdd, 0x01, 0x0a, 0x1b, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73,
+	0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x2e, 0x0a, 0x12, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x61, 0x63, 0x63, 0x6f, 0x75,
+	0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x10, 0x73,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x12,
+	0x19, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09,
+	0x48, 0x00, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x4d, 0x0a, 0x0a, 0x72, 0x65,
+	0x61, 0x6c, 0x6d, 0x5f, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2c,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
+	0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x52, 0x65, 0x61, 0x6c, 0x6d, 0x52, 0x6f,
+	0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x48, 0x01, 0x52, 0x09,
+	0x72, 0x65, 0x61, 0x6c, 0x6d, 0x52, 0x6f, 0x6c, 0x65, 0x42, 0x0b, 0x0a, 0x09, 0x70, 0x72, 0x69,
+	0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x42, 0x11, 0x0a, 0x0f, 0x72, 0x6f, 0x6c, 0x65, 0x5f, 0x61,
+	0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x4a, 0x04, 0x08, 0x01, 0x10, 0x02, 0x22,
+	0x43, 0x0a, 0x1c, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73,
+	0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x23, 0x0a, 0x0d, 0x61, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x61, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65,
+	0x6e, 0x74, 0x49, 0x64, 0x22, 0x42, 0x0a, 0x1b, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x52, 0x6f,
+	0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x23, 0x0a, 0x0d, 0x61, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e,
+	0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x61, 0x73, 0x73, 0x69,
+	0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x22, 0x1e, 0x0a, 0x1c, 0x52, 0x65, 0x6d, 0x6f,
+	0x76, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x7a, 0x0a, 0x1a, 0x4c, 0x69, 0x73, 0x74,
+	0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2e, 0x0a, 0x12, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x5f, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x48, 0x00, 0x52, 0x10, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x41, 0x63, 0x63,
+	0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69,
+	0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49,
+	0x64, 0x42, 0x0b, 0x0a, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x4a, 0x04,
+	0x08, 0x01, 0x10, 0x02, 0x22, 0x68, 0x0a, 0x1b, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65,
+	0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x49, 0x0a, 0x0b, 0x61, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e,
+	0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x27, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73,
+	0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65,
+	0x73, 0x73, 0x2e, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e,
+	0x74, 0x52, 0x0b, 0x61, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x22, 0x49,
+	0x0a, 0x13, 0x52, 0x65, 0x61, 0x6c, 0x6d, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67,
+	0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x19, 0x0a, 0x08, 0x72, 0x65, 0x61, 0x6c, 0x6d, 0x5f, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x72, 0x65, 0x61, 0x6c, 0x6d, 0x49, 0x64,
+	0x12, 0x17, 0x0a, 0x07, 0x72, 0x6f, 0x6c, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x22, 0x96, 0x02, 0x0a, 0x0e, 0x52, 0x6f,
+	0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x0e, 0x0a, 0x02,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x2e, 0x0a, 0x12,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x5f, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f,
+	0x69, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x10, 0x73, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x07,
+	0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52,
+	0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x39, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69,
+	0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x09, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64,
+	0x41, 0x74, 0x12, 0x4d, 0x0a, 0x0a, 0x72, 0x65, 0x61, 0x6c, 0x6d, 0x5f, 0x72, 0x6f, 0x6c, 0x65,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2c, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69,
+	0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73,
+	0x2e, 0x52, 0x65, 0x61, 0x6c, 0x6d, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e,
+	0x6d, 0x65, 0x6e, 0x74, 0x48, 0x01, 0x52, 0x09, 0x72, 0x65, 0x61, 0x6c, 0x6d, 0x52, 0x6f, 0x6c,
+	0x65, 0x42, 0x0b, 0x0a, 0x09, 0x70, 0x72, 0x69, 0x6e, 0x63, 0x69, 0x70, 0x61, 0x6c, 0x42, 0x0c,
+	0x0a, 0x0a, 0x61, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x4a, 0x04, 0x08, 0x02,
+	0x10, 0x03, 0x22, 0x52, 0x0a, 0x10, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x3e, 0x0a, 0x09, 0x72, 0x6f, 0x6c, 0x65, 0x5f, 0x74,
+	0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x21, 0x2e, 0x63, 0x6f, 0x6d, 0x2e,
+	0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63,
+	0x65, 0x73, 0x73, 0x2e, 0x52, 0x6f, 0x6c, 0x65, 0x54, 0x79, 0x70, 0x65, 0x52, 0x08, 0x72, 0x6f,
+	0x6c, 0x65, 0x54, 0x79, 0x70, 0x65, 0x22, 0x48, 0x0a, 0x11, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f,
+	0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x33, 0x0a, 0x05, 0x72,
+	0x6f, 0x6c, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x63, 0x6f, 0x6d,
+	0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63,
+	0x63, 0x65, 0x73, 0x73, 0x2e, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x05, 0x72, 0x6f, 0x6c, 0x65, 0x73,
+	0x22, 0x2a, 0x0a, 0x04, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x2a, 0x69, 0x0a, 0x0e,
 	0x41, 0x75, 0x64, 0x69, 0x74, 0x4c, 0x6f, 0x67, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x12, 0x1c,
 	0x0a, 0x18, 0x41, 0x55, 0x44, 0x49, 0x54, 0x5f, 0x4c, 0x4f, 0x47, 0x5f, 0x53, 0x4f, 0x55, 0x52,
 	0x43, 0x45, 0x5f, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e, 0x10, 0x00, 0x12, 0x1e, 0x0a, 0x1a,
@@ -3393,13 +4550,23 @@ var file_api_v1_accessapi_api_proto_rawDesc = []byte{
 	0x52, 0x5f, 0x54, 0x59, 0x50, 0x45, 0x5f, 0x53, 0x45, 0x52, 0x56, 0x49, 0x43, 0x45, 0x5f, 0x41,
 	0x43, 0x43, 0x4f, 0x55, 0x4e, 0x54, 0x10, 0x02, 0x12, 0x1e, 0x0a, 0x1a, 0x41, 0x55, 0x44, 0x49,
 	0x54, 0x5f, 0x4c, 0x4f, 0x47, 0x5f, 0x41, 0x43, 0x54, 0x4f, 0x52, 0x5f, 0x54, 0x59, 0x50, 0x45,
-	0x5f, 0x41, 0x44, 0x4d, 0x49, 0x4e, 0x10, 0x03, 0x32, 0x9d, 0x11, 0x0a, 0x03, 0x41, 0x50, 0x49,
-	0x12, 0x6b, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x67, 0x52, 0x6f, 0x6c, 0x65, 0x73,
-	0x12, 0x2c, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69,
-	0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4f,
-	0x72, 0x67, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2d,
-	0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
-	0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x67,
+	0x5f, 0x41, 0x44, 0x4d, 0x49, 0x4e, 0x10, 0x03, 0x2a, 0x3a, 0x0a, 0x08, 0x52, 0x6f, 0x6c, 0x65,
+	0x54, 0x79, 0x70, 0x65, 0x12, 0x19, 0x0a, 0x15, 0x52, 0x4f, 0x4c, 0x45, 0x5f, 0x54, 0x59, 0x50,
+	0x45, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12,
+	0x13, 0x0a, 0x0f, 0x52, 0x4f, 0x4c, 0x45, 0x5f, 0x54, 0x59, 0x50, 0x45, 0x5f, 0x52, 0x45, 0x41,
+	0x4c, 0x4d, 0x10, 0x01, 0x32, 0x81, 0x17, 0x0a, 0x03, 0x41, 0x50, 0x49, 0x12, 0x6b, 0x0a, 0x0c,
+	0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x67, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x12, 0x2c, 0x2e, 0x63,
+	0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e,
+	0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x67, 0x52, 0x6f,
+	0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2d, 0x2e, 0x63, 0x6f, 0x6d,
+	0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63,
+	0x63, 0x65, 0x73, 0x73, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x67, 0x52, 0x6f, 0x6c, 0x65,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x62, 0x0a, 0x09, 0x4c, 0x69, 0x73,
+	0x74, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x12, 0x29, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69,
+	0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73,
+	0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x2a, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70,
+	0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x4c, 0x69, 0x73, 0x74,
 	0x52, 0x6f, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x62, 0x0a,
 	0x09, 0x4c, 0x69, 0x73, 0x74, 0x55, 0x73, 0x65, 0x72, 0x73, 0x12, 0x29, 0x2e, 0x63, 0x6f, 0x6d,
 	0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63,
@@ -3531,7 +4698,47 @@ var file_api_v1_accessapi_api_proto_rawDesc = []byte{
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2e, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69,
 	0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73,
 	0x2e, 0x4c, 0x69, 0x73, 0x74, 0x41, 0x75, 0x64, 0x69, 0x74, 0x4c, 0x6f, 0x67, 0x73, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x30, 0x5a, 0x2e, 0x67, 0x69, 0x74, 0x68,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x7c, 0x0a, 0x11, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x31, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31,
+	0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4f, 0x72,
+	0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x32, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69,
+	0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x71, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x67,
+	0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x2e, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73,
+	0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65,
+	0x73, 0x73, 0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67,
+	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2f, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73,
+	0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65,
+	0x73, 0x73, 0x2e, 0x47, 0x65, 0x74, 0x4f, 0x72, 0x67, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x83, 0x01, 0x0a, 0x14, 0x41, 0x73,
+	0x73, 0x69, 0x67, 0x6e, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65,
+	0x6e, 0x74, 0x12, 0x34, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x41, 0x73, 0x73,
+	0x69, 0x67, 0x6e, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e,
+	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x35, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73,
+	0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65,
+	0x73, 0x73, 0x2e, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73,
+	0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x83, 0x01, 0x0a, 0x14, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73,
+	0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x34, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73,
+	0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65,
+	0x73, 0x73, 0x2e, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73,
+	0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x35,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
+	0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x52, 0x65, 0x6d, 0x6f, 0x76, 0x65, 0x52,
+	0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x80, 0x01, 0x0a, 0x13, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f,
+	0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x12, 0x33, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31,
+	0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65,
+	0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x34, 0x2e, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x2e, 0x4c, 0x69, 0x73,
+	0x74, 0x52, 0x6f, 0x6c, 0x65, 0x41, 0x73, 0x73, 0x69, 0x67, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x73,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x30, 0x5a, 0x2e, 0x67, 0x69, 0x74, 0x68,
 	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x70, 0x69, 0x72, 0x6c, 0x2f, 0x73, 0x70, 0x69,
 	0x72, 0x6c, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x73, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31,
 	0x2f, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
@@ -3550,141 +4757,182 @@ func file_api_v1_accessapi_api_proto_rawDescGZIP() []byte {
 	return file_api_v1_accessapi_api_proto_rawDescData
 }
 
-var file_api_v1_accessapi_api_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_api_v1_accessapi_api_proto_msgTypes = make([]protoimpl.MessageInfo, 48)
+var file_api_v1_accessapi_api_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_api_v1_accessapi_api_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
 var file_api_v1_accessapi_api_proto_goTypes = []any{
 	(AuditLogSource)(0),                           // 0: com.spirl.api.v1.access.AuditLogSource
 	(AuditLogActorType)(0),                        // 1: com.spirl.api.v1.access.AuditLogActorType
-	(*ListAuditLogsResponse)(nil),                 // 2: com.spirl.api.v1.access.ListAuditLogsResponse
-	(*ListAuditLogsRequest)(nil),                  // 3: com.spirl.api.v1.access.ListAuditLogsRequest
-	(*AuditLog)(nil),                              // 4: com.spirl.api.v1.access.AuditLog
-	(*Request)(nil),                               // 5: com.spirl.api.v1.access.Request
-	(*Actor)(nil),                                 // 6: com.spirl.api.v1.access.Actor
-	(*UserActor)(nil),                             // 7: com.spirl.api.v1.access.UserActor
-	(*ServiceAccountActor)(nil),                   // 8: com.spirl.api.v1.access.ServiceAccountActor
-	(*TrustDomain)(nil),                           // 9: com.spirl.api.v1.access.TrustDomain
-	(*AuditLogFilter)(nil),                        // 10: com.spirl.api.v1.access.AuditLogFilter
-	(*ListOrgRolesRequest)(nil),                   // 11: com.spirl.api.v1.access.ListOrgRolesRequest
-	(*ListOrgRolesResponse)(nil),                  // 12: com.spirl.api.v1.access.ListOrgRolesResponse
-	(*RenewUserInvitationRequest)(nil),            // 13: com.spirl.api.v1.access.RenewUserInvitationRequest
-	(*RenewUserInvitationResponse)(nil),           // 14: com.spirl.api.v1.access.RenewUserInvitationResponse
-	(*CreateUserInvitationRequest)(nil),           // 15: com.spirl.api.v1.access.CreateUserInvitationRequest
-	(*CreateUserInvitationResponse)(nil),          // 16: com.spirl.api.v1.access.CreateUserInvitationResponse
-	(*DeleteUserInvitationRequest)(nil),           // 17: com.spirl.api.v1.access.DeleteUserInvitationRequest
-	(*DeleteUserInvitationResponse)(nil),          // 18: com.spirl.api.v1.access.DeleteUserInvitationResponse
-	(*ListUserInvitationsRequest)(nil),            // 19: com.spirl.api.v1.access.ListUserInvitationsRequest
-	(*ListUserInvitationsResponse)(nil),           // 20: com.spirl.api.v1.access.ListUserInvitationsResponse
-	(*ListUsersRequest)(nil),                      // 21: com.spirl.api.v1.access.ListUsersRequest
-	(*ListUsersResponse)(nil),                     // 22: com.spirl.api.v1.access.ListUsersResponse
-	(*UpdateUserRoleRequest)(nil),                 // 23: com.spirl.api.v1.access.UpdateUserRoleRequest
-	(*UpdateUserRoleResponse)(nil),                // 24: com.spirl.api.v1.access.UpdateUserRoleResponse
-	(*DeleteUserRequest)(nil),                     // 25: com.spirl.api.v1.access.DeleteUserRequest
-	(*DeleteUserResponse)(nil),                    // 26: com.spirl.api.v1.access.DeleteUserResponse
-	(*CreateServiceAccountRequest)(nil),           // 27: com.spirl.api.v1.access.CreateServiceAccountRequest
-	(*CreateServiceAccountResponse)(nil),          // 28: com.spirl.api.v1.access.CreateServiceAccountResponse
-	(*ListServiceAccountsRequest)(nil),            // 29: com.spirl.api.v1.access.ListServiceAccountsRequest
-	(*ListServiceAccountsResponse)(nil),           // 30: com.spirl.api.v1.access.ListServiceAccountsResponse
-	(*GetServiceAccountInfoRequest)(nil),          // 31: com.spirl.api.v1.access.GetServiceAccountInfoRequest
-	(*GetServiceAccountInfoResponse)(nil),         // 32: com.spirl.api.v1.access.GetServiceAccountInfoResponse
-	(*UpdateServiceAccountRoleRequest)(nil),       // 33: com.spirl.api.v1.access.UpdateServiceAccountRoleRequest
-	(*UpdateServiceAccountRoleResponse)(nil),      // 34: com.spirl.api.v1.access.UpdateServiceAccountRoleResponse
-	(*DeleteServiceAccountRequest)(nil),           // 35: com.spirl.api.v1.access.DeleteServiceAccountRequest
-	(*DeleteServiceAccountResponse)(nil),          // 36: com.spirl.api.v1.access.DeleteServiceAccountResponse
-	(*CreateServiceAccountKeyRequest)(nil),        // 37: com.spirl.api.v1.access.CreateServiceAccountKeyRequest
-	(*CreateServiceAccountKeyResponse)(nil),       // 38: com.spirl.api.v1.access.CreateServiceAccountKeyResponse
-	(*DeleteServiceAccountKeyRequest)(nil),        // 39: com.spirl.api.v1.access.DeleteServiceAccountKeyRequest
-	(*DeleteServiceAccountKeyResponse)(nil),       // 40: com.spirl.api.v1.access.DeleteServiceAccountKeyResponse
-	(*UpdateServiceAccountKeyStatusRequest)(nil),  // 41: com.spirl.api.v1.access.UpdateServiceAccountKeyStatusRequest
-	(*UpdateServiceAccountKeyStatusResponse)(nil), // 42: com.spirl.api.v1.access.UpdateServiceAccountKeyStatusResponse
-	(*OrgRole)(nil),                               // 43: com.spirl.api.v1.access.OrgRole
-	(*User)(nil),                                  // 44: com.spirl.api.v1.access.User
-	(*UserInvitation)(nil),                        // 45: com.spirl.api.v1.access.UserInvitation
-	(*ServiceAccountKey)(nil),                     // 46: com.spirl.api.v1.access.ServiceAccountKey
-	(*ServiceAccount)(nil),                        // 47: com.spirl.api.v1.access.ServiceAccount
-	(*CreatedBy)(nil),                             // 48: com.spirl.api.v1.access.CreatedBy
-	(*PKIXPublicKey)(nil),                         // 49: com.spirl.api.v1.access.PKIXPublicKey
-	(*timestamppb.Timestamp)(nil),                 // 50: google.protobuf.Timestamp
-	(*anypb.Any)(nil),                             // 51: google.protobuf.Any
-	(*durationpb.Duration)(nil),                   // 52: google.protobuf.Duration
+	(RoleType)(0),                                 // 2: com.spirl.api.v1.access.RoleType
+	(*ListAuditLogsResponse)(nil),                 // 3: com.spirl.api.v1.access.ListAuditLogsResponse
+	(*ListAuditLogsRequest)(nil),                  // 4: com.spirl.api.v1.access.ListAuditLogsRequest
+	(*AuditLog)(nil),                              // 5: com.spirl.api.v1.access.AuditLog
+	(*Request)(nil),                               // 6: com.spirl.api.v1.access.Request
+	(*Actor)(nil),                                 // 7: com.spirl.api.v1.access.Actor
+	(*UserActor)(nil),                             // 8: com.spirl.api.v1.access.UserActor
+	(*ServiceAccountActor)(nil),                   // 9: com.spirl.api.v1.access.ServiceAccountActor
+	(*TrustDomain)(nil),                           // 10: com.spirl.api.v1.access.TrustDomain
+	(*AuditLogFilter)(nil),                        // 11: com.spirl.api.v1.access.AuditLogFilter
+	(*ListOrgRolesRequest)(nil),                   // 12: com.spirl.api.v1.access.ListOrgRolesRequest
+	(*ListOrgRolesResponse)(nil),                  // 13: com.spirl.api.v1.access.ListOrgRolesResponse
+	(*RenewUserInvitationRequest)(nil),            // 14: com.spirl.api.v1.access.RenewUserInvitationRequest
+	(*RenewUserInvitationResponse)(nil),           // 15: com.spirl.api.v1.access.RenewUserInvitationResponse
+	(*CreateUserInvitationRequest)(nil),           // 16: com.spirl.api.v1.access.CreateUserInvitationRequest
+	(*CreateUserInvitationResponse)(nil),          // 17: com.spirl.api.v1.access.CreateUserInvitationResponse
+	(*DeleteUserInvitationRequest)(nil),           // 18: com.spirl.api.v1.access.DeleteUserInvitationRequest
+	(*DeleteUserInvitationResponse)(nil),          // 19: com.spirl.api.v1.access.DeleteUserInvitationResponse
+	(*ListUserInvitationsRequest)(nil),            // 20: com.spirl.api.v1.access.ListUserInvitationsRequest
+	(*ListUserInvitationsResponse)(nil),           // 21: com.spirl.api.v1.access.ListUserInvitationsResponse
+	(*ListUsersRequest)(nil),                      // 22: com.spirl.api.v1.access.ListUsersRequest
+	(*ListUsersResponse)(nil),                     // 23: com.spirl.api.v1.access.ListUsersResponse
+	(*UpdateUserRoleRequest)(nil),                 // 24: com.spirl.api.v1.access.UpdateUserRoleRequest
+	(*UpdateUserRoleResponse)(nil),                // 25: com.spirl.api.v1.access.UpdateUserRoleResponse
+	(*DeleteUserRequest)(nil),                     // 26: com.spirl.api.v1.access.DeleteUserRequest
+	(*DeleteUserResponse)(nil),                    // 27: com.spirl.api.v1.access.DeleteUserResponse
+	(*CreateServiceAccountRequest)(nil),           // 28: com.spirl.api.v1.access.CreateServiceAccountRequest
+	(*CreateServiceAccountResponse)(nil),          // 29: com.spirl.api.v1.access.CreateServiceAccountResponse
+	(*ListServiceAccountsRequest)(nil),            // 30: com.spirl.api.v1.access.ListServiceAccountsRequest
+	(*ListServiceAccountsResponse)(nil),           // 31: com.spirl.api.v1.access.ListServiceAccountsResponse
+	(*GetServiceAccountInfoRequest)(nil),          // 32: com.spirl.api.v1.access.GetServiceAccountInfoRequest
+	(*GetServiceAccountInfoResponse)(nil),         // 33: com.spirl.api.v1.access.GetServiceAccountInfoResponse
+	(*UpdateServiceAccountRoleRequest)(nil),       // 34: com.spirl.api.v1.access.UpdateServiceAccountRoleRequest
+	(*UpdateServiceAccountRoleResponse)(nil),      // 35: com.spirl.api.v1.access.UpdateServiceAccountRoleResponse
+	(*DeleteServiceAccountRequest)(nil),           // 36: com.spirl.api.v1.access.DeleteServiceAccountRequest
+	(*DeleteServiceAccountResponse)(nil),          // 37: com.spirl.api.v1.access.DeleteServiceAccountResponse
+	(*CreateServiceAccountKeyRequest)(nil),        // 38: com.spirl.api.v1.access.CreateServiceAccountKeyRequest
+	(*CreateServiceAccountKeyResponse)(nil),       // 39: com.spirl.api.v1.access.CreateServiceAccountKeyResponse
+	(*DeleteServiceAccountKeyRequest)(nil),        // 40: com.spirl.api.v1.access.DeleteServiceAccountKeyRequest
+	(*DeleteServiceAccountKeyResponse)(nil),       // 41: com.spirl.api.v1.access.DeleteServiceAccountKeyResponse
+	(*UpdateServiceAccountKeyStatusRequest)(nil),  // 42: com.spirl.api.v1.access.UpdateServiceAccountKeyStatusRequest
+	(*UpdateServiceAccountKeyStatusResponse)(nil), // 43: com.spirl.api.v1.access.UpdateServiceAccountKeyStatusResponse
+	(*OrgRole)(nil),                               // 44: com.spirl.api.v1.access.OrgRole
+	(*User)(nil),                                  // 45: com.spirl.api.v1.access.User
+	(*UserInvitation)(nil),                        // 46: com.spirl.api.v1.access.UserInvitation
+	(*ServiceAccountKey)(nil),                     // 47: com.spirl.api.v1.access.ServiceAccountKey
+	(*ServiceAccount)(nil),                        // 48: com.spirl.api.v1.access.ServiceAccount
+	(*CreatedBy)(nil),                             // 49: com.spirl.api.v1.access.CreatedBy
+	(*PKIXPublicKey)(nil),                         // 50: com.spirl.api.v1.access.PKIXPublicKey
+	(*UpdateOrgSettingsRequest)(nil),              // 51: com.spirl.api.v1.access.UpdateOrgSettingsRequest
+	(*UpdateOrgSettingsResponse)(nil),             // 52: com.spirl.api.v1.access.UpdateOrgSettingsResponse
+	(*GetOrgSettingsRequest)(nil),                 // 53: com.spirl.api.v1.access.GetOrgSettingsRequest
+	(*GetOrgSettingsResponse)(nil),                // 54: com.spirl.api.v1.access.GetOrgSettingsResponse
+	(*OrgSettings)(nil),                           // 55: com.spirl.api.v1.access.OrgSettings
+	(*AssignRoleAssignmentRequest)(nil),           // 56: com.spirl.api.v1.access.AssignRoleAssignmentRequest
+	(*AssignRoleAssignmentResponse)(nil),          // 57: com.spirl.api.v1.access.AssignRoleAssignmentResponse
+	(*RemoveRoleAssignmentRequest)(nil),           // 58: com.spirl.api.v1.access.RemoveRoleAssignmentRequest
+	(*RemoveRoleAssignmentResponse)(nil),          // 59: com.spirl.api.v1.access.RemoveRoleAssignmentResponse
+	(*ListRoleAssignmentsRequest)(nil),            // 60: com.spirl.api.v1.access.ListRoleAssignmentsRequest
+	(*ListRoleAssignmentsResponse)(nil),           // 61: com.spirl.api.v1.access.ListRoleAssignmentsResponse
+	(*RealmRoleAssignment)(nil),                   // 62: com.spirl.api.v1.access.RealmRoleAssignment
+	(*RoleAssignment)(nil),                        // 63: com.spirl.api.v1.access.RoleAssignment
+	(*ListRolesRequest)(nil),                      // 64: com.spirl.api.v1.access.ListRolesRequest
+	(*ListRolesResponse)(nil),                     // 65: com.spirl.api.v1.access.ListRolesResponse
+	(*Role)(nil),                                  // 66: com.spirl.api.v1.access.Role
+	(*timestamppb.Timestamp)(nil),                 // 67: google.protobuf.Timestamp
+	(*anypb.Any)(nil),                             // 68: google.protobuf.Any
+	(*durationpb.Duration)(nil),                   // 69: google.protobuf.Duration
 }
 var file_api_v1_accessapi_api_proto_depIdxs = []int32{
-	4,  // 0: com.spirl.api.v1.access.ListAuditLogsResponse.logs:type_name -> com.spirl.api.v1.access.AuditLog
-	10, // 1: com.spirl.api.v1.access.ListAuditLogsRequest.filter:type_name -> com.spirl.api.v1.access.AuditLogFilter
-	50, // 2: com.spirl.api.v1.access.ListAuditLogsRequest.start_time:type_name -> google.protobuf.Timestamp
-	50, // 3: com.spirl.api.v1.access.ListAuditLogsRequest.end_time:type_name -> google.protobuf.Timestamp
-	6,  // 4: com.spirl.api.v1.access.AuditLog.actor:type_name -> com.spirl.api.v1.access.Actor
-	50, // 5: com.spirl.api.v1.access.AuditLog.ts:type_name -> google.protobuf.Timestamp
-	9,  // 6: com.spirl.api.v1.access.AuditLog.trust_domain:type_name -> com.spirl.api.v1.access.TrustDomain
+	5,  // 0: com.spirl.api.v1.access.ListAuditLogsResponse.logs:type_name -> com.spirl.api.v1.access.AuditLog
+	11, // 1: com.spirl.api.v1.access.ListAuditLogsRequest.filter:type_name -> com.spirl.api.v1.access.AuditLogFilter
+	67, // 2: com.spirl.api.v1.access.ListAuditLogsRequest.start_time:type_name -> google.protobuf.Timestamp
+	67, // 3: com.spirl.api.v1.access.ListAuditLogsRequest.end_time:type_name -> google.protobuf.Timestamp
+	7,  // 4: com.spirl.api.v1.access.AuditLog.actor:type_name -> com.spirl.api.v1.access.Actor
+	67, // 5: com.spirl.api.v1.access.AuditLog.ts:type_name -> google.protobuf.Timestamp
+	10, // 6: com.spirl.api.v1.access.AuditLog.trust_domain:type_name -> com.spirl.api.v1.access.TrustDomain
 	0,  // 7: com.spirl.api.v1.access.AuditLog.source:type_name -> com.spirl.api.v1.access.AuditLogSource
-	5,  // 8: com.spirl.api.v1.access.AuditLog.request:type_name -> com.spirl.api.v1.access.Request
-	51, // 9: com.spirl.api.v1.access.Request.message:type_name -> google.protobuf.Any
-	7,  // 10: com.spirl.api.v1.access.Actor.user:type_name -> com.spirl.api.v1.access.UserActor
-	8,  // 11: com.spirl.api.v1.access.Actor.service_account:type_name -> com.spirl.api.v1.access.ServiceAccountActor
-	7,  // 12: com.spirl.api.v1.access.Actor.spirl_admin:type_name -> com.spirl.api.v1.access.UserActor
+	6,  // 8: com.spirl.api.v1.access.AuditLog.request:type_name -> com.spirl.api.v1.access.Request
+	68, // 9: com.spirl.api.v1.access.Request.message:type_name -> google.protobuf.Any
+	8,  // 10: com.spirl.api.v1.access.Actor.user:type_name -> com.spirl.api.v1.access.UserActor
+	9,  // 11: com.spirl.api.v1.access.Actor.service_account:type_name -> com.spirl.api.v1.access.ServiceAccountActor
+	8,  // 12: com.spirl.api.v1.access.Actor.spirl_admin:type_name -> com.spirl.api.v1.access.UserActor
 	0,  // 13: com.spirl.api.v1.access.AuditLogFilter.by_source:type_name -> com.spirl.api.v1.access.AuditLogSource
 	1,  // 14: com.spirl.api.v1.access.AuditLogFilter.by_actor_type:type_name -> com.spirl.api.v1.access.AuditLogActorType
-	43, // 15: com.spirl.api.v1.access.ListOrgRolesResponse.roles:type_name -> com.spirl.api.v1.access.OrgRole
-	52, // 16: com.spirl.api.v1.access.RenewUserInvitationRequest.ttl:type_name -> google.protobuf.Duration
-	45, // 17: com.spirl.api.v1.access.RenewUserInvitationResponse.invitation:type_name -> com.spirl.api.v1.access.UserInvitation
-	52, // 18: com.spirl.api.v1.access.CreateUserInvitationRequest.ttl:type_name -> google.protobuf.Duration
-	45, // 19: com.spirl.api.v1.access.CreateUserInvitationResponse.invitation:type_name -> com.spirl.api.v1.access.UserInvitation
-	45, // 20: com.spirl.api.v1.access.ListUserInvitationsResponse.invitations:type_name -> com.spirl.api.v1.access.UserInvitation
-	44, // 21: com.spirl.api.v1.access.ListUsersResponse.users:type_name -> com.spirl.api.v1.access.User
-	47, // 22: com.spirl.api.v1.access.CreateServiceAccountResponse.service_account:type_name -> com.spirl.api.v1.access.ServiceAccount
-	47, // 23: com.spirl.api.v1.access.ListServiceAccountsResponse.service_accounts:type_name -> com.spirl.api.v1.access.ServiceAccount
-	47, // 24: com.spirl.api.v1.access.GetServiceAccountInfoResponse.service_account:type_name -> com.spirl.api.v1.access.ServiceAccount
-	46, // 25: com.spirl.api.v1.access.GetServiceAccountInfoResponse.service_account_keys:type_name -> com.spirl.api.v1.access.ServiceAccountKey
-	47, // 26: com.spirl.api.v1.access.UpdateServiceAccountRoleResponse.service_account:type_name -> com.spirl.api.v1.access.ServiceAccount
-	49, // 27: com.spirl.api.v1.access.CreateServiceAccountKeyRequest.pkix_pubkey:type_name -> com.spirl.api.v1.access.PKIXPublicKey
-	46, // 28: com.spirl.api.v1.access.CreateServiceAccountKeyResponse.service_account_key:type_name -> com.spirl.api.v1.access.ServiceAccountKey
-	46, // 29: com.spirl.api.v1.access.UpdateServiceAccountKeyStatusResponse.service_account_key:type_name -> com.spirl.api.v1.access.ServiceAccountKey
-	43, // 30: com.spirl.api.v1.access.User.role:type_name -> com.spirl.api.v1.access.OrgRole
-	43, // 31: com.spirl.api.v1.access.UserInvitation.role:type_name -> com.spirl.api.v1.access.OrgRole
-	50, // 32: com.spirl.api.v1.access.UserInvitation.created_at:type_name -> google.protobuf.Timestamp
-	50, // 33: com.spirl.api.v1.access.UserInvitation.expires_at:type_name -> google.protobuf.Timestamp
-	49, // 34: com.spirl.api.v1.access.ServiceAccountKey.public_key:type_name -> com.spirl.api.v1.access.PKIXPublicKey
-	50, // 35: com.spirl.api.v1.access.ServiceAccountKey.created_at:type_name -> google.protobuf.Timestamp
-	50, // 36: com.spirl.api.v1.access.ServiceAccount.created_at:type_name -> google.protobuf.Timestamp
-	48, // 37: com.spirl.api.v1.access.ServiceAccount.created_by:type_name -> com.spirl.api.v1.access.CreatedBy
-	11, // 38: com.spirl.api.v1.access.API.ListOrgRoles:input_type -> com.spirl.api.v1.access.ListOrgRolesRequest
-	21, // 39: com.spirl.api.v1.access.API.ListUsers:input_type -> com.spirl.api.v1.access.ListUsersRequest
-	23, // 40: com.spirl.api.v1.access.API.UpdateUserRole:input_type -> com.spirl.api.v1.access.UpdateUserRoleRequest
-	25, // 41: com.spirl.api.v1.access.API.DeleteUser:input_type -> com.spirl.api.v1.access.DeleteUserRequest
-	15, // 42: com.spirl.api.v1.access.API.CreateUserInvitation:input_type -> com.spirl.api.v1.access.CreateUserInvitationRequest
-	13, // 43: com.spirl.api.v1.access.API.RenewUserInvitation:input_type -> com.spirl.api.v1.access.RenewUserInvitationRequest
-	17, // 44: com.spirl.api.v1.access.API.DeleteUserInvitation:input_type -> com.spirl.api.v1.access.DeleteUserInvitationRequest
-	19, // 45: com.spirl.api.v1.access.API.ListUserInvitations:input_type -> com.spirl.api.v1.access.ListUserInvitationsRequest
-	27, // 46: com.spirl.api.v1.access.API.CreateServiceAccount:input_type -> com.spirl.api.v1.access.CreateServiceAccountRequest
-	29, // 47: com.spirl.api.v1.access.API.ListServiceAccounts:input_type -> com.spirl.api.v1.access.ListServiceAccountsRequest
-	31, // 48: com.spirl.api.v1.access.API.GetServiceAccountInfo:input_type -> com.spirl.api.v1.access.GetServiceAccountInfoRequest
-	33, // 49: com.spirl.api.v1.access.API.UpdateServiceAccountRole:input_type -> com.spirl.api.v1.access.UpdateServiceAccountRoleRequest
-	35, // 50: com.spirl.api.v1.access.API.DeleteServiceAccount:input_type -> com.spirl.api.v1.access.DeleteServiceAccountRequest
-	37, // 51: com.spirl.api.v1.access.API.CreateServiceAccountKey:input_type -> com.spirl.api.v1.access.CreateServiceAccountKeyRequest
-	39, // 52: com.spirl.api.v1.access.API.DeleteServiceAccountKey:input_type -> com.spirl.api.v1.access.DeleteServiceAccountKeyRequest
-	41, // 53: com.spirl.api.v1.access.API.UpdateServiceAccountKeyStatus:input_type -> com.spirl.api.v1.access.UpdateServiceAccountKeyStatusRequest
-	3,  // 54: com.spirl.api.v1.access.API.ListAuditLogs:input_type -> com.spirl.api.v1.access.ListAuditLogsRequest
-	12, // 55: com.spirl.api.v1.access.API.ListOrgRoles:output_type -> com.spirl.api.v1.access.ListOrgRolesResponse
-	22, // 56: com.spirl.api.v1.access.API.ListUsers:output_type -> com.spirl.api.v1.access.ListUsersResponse
-	24, // 57: com.spirl.api.v1.access.API.UpdateUserRole:output_type -> com.spirl.api.v1.access.UpdateUserRoleResponse
-	26, // 58: com.spirl.api.v1.access.API.DeleteUser:output_type -> com.spirl.api.v1.access.DeleteUserResponse
-	16, // 59: com.spirl.api.v1.access.API.CreateUserInvitation:output_type -> com.spirl.api.v1.access.CreateUserInvitationResponse
-	14, // 60: com.spirl.api.v1.access.API.RenewUserInvitation:output_type -> com.spirl.api.v1.access.RenewUserInvitationResponse
-	18, // 61: com.spirl.api.v1.access.API.DeleteUserInvitation:output_type -> com.spirl.api.v1.access.DeleteUserInvitationResponse
-	20, // 62: com.spirl.api.v1.access.API.ListUserInvitations:output_type -> com.spirl.api.v1.access.ListUserInvitationsResponse
-	28, // 63: com.spirl.api.v1.access.API.CreateServiceAccount:output_type -> com.spirl.api.v1.access.CreateServiceAccountResponse
-	30, // 64: com.spirl.api.v1.access.API.ListServiceAccounts:output_type -> com.spirl.api.v1.access.ListServiceAccountsResponse
-	32, // 65: com.spirl.api.v1.access.API.GetServiceAccountInfo:output_type -> com.spirl.api.v1.access.GetServiceAccountInfoResponse
-	34, // 66: com.spirl.api.v1.access.API.UpdateServiceAccountRole:output_type -> com.spirl.api.v1.access.UpdateServiceAccountRoleResponse
-	36, // 67: com.spirl.api.v1.access.API.DeleteServiceAccount:output_type -> com.spirl.api.v1.access.DeleteServiceAccountResponse
-	38, // 68: com.spirl.api.v1.access.API.CreateServiceAccountKey:output_type -> com.spirl.api.v1.access.CreateServiceAccountKeyResponse
-	40, // 69: com.spirl.api.v1.access.API.DeleteServiceAccountKey:output_type -> com.spirl.api.v1.access.DeleteServiceAccountKeyResponse
-	42, // 70: com.spirl.api.v1.access.API.UpdateServiceAccountKeyStatus:output_type -> com.spirl.api.v1.access.UpdateServiceAccountKeyStatusResponse
-	2,  // 71: com.spirl.api.v1.access.API.ListAuditLogs:output_type -> com.spirl.api.v1.access.ListAuditLogsResponse
-	55, // [55:72] is the sub-list for method output_type
-	38, // [38:55] is the sub-list for method input_type
-	38, // [38:38] is the sub-list for extension type_name
-	38, // [38:38] is the sub-list for extension extendee
-	0,  // [0:38] is the sub-list for field type_name
+	44, // 15: com.spirl.api.v1.access.ListOrgRolesResponse.roles:type_name -> com.spirl.api.v1.access.OrgRole
+	69, // 16: com.spirl.api.v1.access.RenewUserInvitationRequest.ttl:type_name -> google.protobuf.Duration
+	46, // 17: com.spirl.api.v1.access.RenewUserInvitationResponse.invitation:type_name -> com.spirl.api.v1.access.UserInvitation
+	69, // 18: com.spirl.api.v1.access.CreateUserInvitationRequest.ttl:type_name -> google.protobuf.Duration
+	46, // 19: com.spirl.api.v1.access.CreateUserInvitationResponse.invitation:type_name -> com.spirl.api.v1.access.UserInvitation
+	46, // 20: com.spirl.api.v1.access.ListUserInvitationsResponse.invitations:type_name -> com.spirl.api.v1.access.UserInvitation
+	45, // 21: com.spirl.api.v1.access.ListUsersResponse.users:type_name -> com.spirl.api.v1.access.User
+	48, // 22: com.spirl.api.v1.access.CreateServiceAccountResponse.service_account:type_name -> com.spirl.api.v1.access.ServiceAccount
+	48, // 23: com.spirl.api.v1.access.ListServiceAccountsResponse.service_accounts:type_name -> com.spirl.api.v1.access.ServiceAccount
+	48, // 24: com.spirl.api.v1.access.GetServiceAccountInfoResponse.service_account:type_name -> com.spirl.api.v1.access.ServiceAccount
+	47, // 25: com.spirl.api.v1.access.GetServiceAccountInfoResponse.service_account_keys:type_name -> com.spirl.api.v1.access.ServiceAccountKey
+	48, // 26: com.spirl.api.v1.access.UpdateServiceAccountRoleResponse.service_account:type_name -> com.spirl.api.v1.access.ServiceAccount
+	50, // 27: com.spirl.api.v1.access.CreateServiceAccountKeyRequest.pkix_pubkey:type_name -> com.spirl.api.v1.access.PKIXPublicKey
+	47, // 28: com.spirl.api.v1.access.CreateServiceAccountKeyResponse.service_account_key:type_name -> com.spirl.api.v1.access.ServiceAccountKey
+	47, // 29: com.spirl.api.v1.access.UpdateServiceAccountKeyStatusResponse.service_account_key:type_name -> com.spirl.api.v1.access.ServiceAccountKey
+	44, // 30: com.spirl.api.v1.access.User.role:type_name -> com.spirl.api.v1.access.OrgRole
+	44, // 31: com.spirl.api.v1.access.UserInvitation.role:type_name -> com.spirl.api.v1.access.OrgRole
+	67, // 32: com.spirl.api.v1.access.UserInvitation.created_at:type_name -> google.protobuf.Timestamp
+	67, // 33: com.spirl.api.v1.access.UserInvitation.expires_at:type_name -> google.protobuf.Timestamp
+	50, // 34: com.spirl.api.v1.access.ServiceAccountKey.public_key:type_name -> com.spirl.api.v1.access.PKIXPublicKey
+	67, // 35: com.spirl.api.v1.access.ServiceAccountKey.created_at:type_name -> google.protobuf.Timestamp
+	67, // 36: com.spirl.api.v1.access.ServiceAccount.created_at:type_name -> google.protobuf.Timestamp
+	49, // 37: com.spirl.api.v1.access.ServiceAccount.created_by:type_name -> com.spirl.api.v1.access.CreatedBy
+	67, // 38: com.spirl.api.v1.access.UpdateOrgSettingsRequest.assume_org_expiration_time:type_name -> google.protobuf.Timestamp
+	55, // 39: com.spirl.api.v1.access.UpdateOrgSettingsResponse.org_settings:type_name -> com.spirl.api.v1.access.OrgSettings
+	55, // 40: com.spirl.api.v1.access.GetOrgSettingsResponse.org_settings:type_name -> com.spirl.api.v1.access.OrgSettings
+	67, // 41: com.spirl.api.v1.access.OrgSettings.created_at:type_name -> google.protobuf.Timestamp
+	67, // 42: com.spirl.api.v1.access.OrgSettings.updated_at:type_name -> google.protobuf.Timestamp
+	67, // 43: com.spirl.api.v1.access.OrgSettings.assume_org_expiration_time:type_name -> google.protobuf.Timestamp
+	62, // 44: com.spirl.api.v1.access.AssignRoleAssignmentRequest.realm_role:type_name -> com.spirl.api.v1.access.RealmRoleAssignment
+	63, // 45: com.spirl.api.v1.access.ListRoleAssignmentsResponse.assignments:type_name -> com.spirl.api.v1.access.RoleAssignment
+	67, // 46: com.spirl.api.v1.access.RoleAssignment.created_at:type_name -> google.protobuf.Timestamp
+	62, // 47: com.spirl.api.v1.access.RoleAssignment.realm_role:type_name -> com.spirl.api.v1.access.RealmRoleAssignment
+	2,  // 48: com.spirl.api.v1.access.ListRolesRequest.role_type:type_name -> com.spirl.api.v1.access.RoleType
+	66, // 49: com.spirl.api.v1.access.ListRolesResponse.roles:type_name -> com.spirl.api.v1.access.Role
+	12, // 50: com.spirl.api.v1.access.API.ListOrgRoles:input_type -> com.spirl.api.v1.access.ListOrgRolesRequest
+	64, // 51: com.spirl.api.v1.access.API.ListRoles:input_type -> com.spirl.api.v1.access.ListRolesRequest
+	22, // 52: com.spirl.api.v1.access.API.ListUsers:input_type -> com.spirl.api.v1.access.ListUsersRequest
+	24, // 53: com.spirl.api.v1.access.API.UpdateUserRole:input_type -> com.spirl.api.v1.access.UpdateUserRoleRequest
+	26, // 54: com.spirl.api.v1.access.API.DeleteUser:input_type -> com.spirl.api.v1.access.DeleteUserRequest
+	16, // 55: com.spirl.api.v1.access.API.CreateUserInvitation:input_type -> com.spirl.api.v1.access.CreateUserInvitationRequest
+	14, // 56: com.spirl.api.v1.access.API.RenewUserInvitation:input_type -> com.spirl.api.v1.access.RenewUserInvitationRequest
+	18, // 57: com.spirl.api.v1.access.API.DeleteUserInvitation:input_type -> com.spirl.api.v1.access.DeleteUserInvitationRequest
+	20, // 58: com.spirl.api.v1.access.API.ListUserInvitations:input_type -> com.spirl.api.v1.access.ListUserInvitationsRequest
+	28, // 59: com.spirl.api.v1.access.API.CreateServiceAccount:input_type -> com.spirl.api.v1.access.CreateServiceAccountRequest
+	30, // 60: com.spirl.api.v1.access.API.ListServiceAccounts:input_type -> com.spirl.api.v1.access.ListServiceAccountsRequest
+	32, // 61: com.spirl.api.v1.access.API.GetServiceAccountInfo:input_type -> com.spirl.api.v1.access.GetServiceAccountInfoRequest
+	34, // 62: com.spirl.api.v1.access.API.UpdateServiceAccountRole:input_type -> com.spirl.api.v1.access.UpdateServiceAccountRoleRequest
+	36, // 63: com.spirl.api.v1.access.API.DeleteServiceAccount:input_type -> com.spirl.api.v1.access.DeleteServiceAccountRequest
+	38, // 64: com.spirl.api.v1.access.API.CreateServiceAccountKey:input_type -> com.spirl.api.v1.access.CreateServiceAccountKeyRequest
+	40, // 65: com.spirl.api.v1.access.API.DeleteServiceAccountKey:input_type -> com.spirl.api.v1.access.DeleteServiceAccountKeyRequest
+	42, // 66: com.spirl.api.v1.access.API.UpdateServiceAccountKeyStatus:input_type -> com.spirl.api.v1.access.UpdateServiceAccountKeyStatusRequest
+	4,  // 67: com.spirl.api.v1.access.API.ListAuditLogs:input_type -> com.spirl.api.v1.access.ListAuditLogsRequest
+	51, // 68: com.spirl.api.v1.access.API.UpdateOrgSettings:input_type -> com.spirl.api.v1.access.UpdateOrgSettingsRequest
+	53, // 69: com.spirl.api.v1.access.API.GetOrgSettings:input_type -> com.spirl.api.v1.access.GetOrgSettingsRequest
+	56, // 70: com.spirl.api.v1.access.API.AssignRoleAssignment:input_type -> com.spirl.api.v1.access.AssignRoleAssignmentRequest
+	58, // 71: com.spirl.api.v1.access.API.RemoveRoleAssignment:input_type -> com.spirl.api.v1.access.RemoveRoleAssignmentRequest
+	60, // 72: com.spirl.api.v1.access.API.ListRoleAssignments:input_type -> com.spirl.api.v1.access.ListRoleAssignmentsRequest
+	13, // 73: com.spirl.api.v1.access.API.ListOrgRoles:output_type -> com.spirl.api.v1.access.ListOrgRolesResponse
+	65, // 74: com.spirl.api.v1.access.API.ListRoles:output_type -> com.spirl.api.v1.access.ListRolesResponse
+	23, // 75: com.spirl.api.v1.access.API.ListUsers:output_type -> com.spirl.api.v1.access.ListUsersResponse
+	25, // 76: com.spirl.api.v1.access.API.UpdateUserRole:output_type -> com.spirl.api.v1.access.UpdateUserRoleResponse
+	27, // 77: com.spirl.api.v1.access.API.DeleteUser:output_type -> com.spirl.api.v1.access.DeleteUserResponse
+	17, // 78: com.spirl.api.v1.access.API.CreateUserInvitation:output_type -> com.spirl.api.v1.access.CreateUserInvitationResponse
+	15, // 79: com.spirl.api.v1.access.API.RenewUserInvitation:output_type -> com.spirl.api.v1.access.RenewUserInvitationResponse
+	19, // 80: com.spirl.api.v1.access.API.DeleteUserInvitation:output_type -> com.spirl.api.v1.access.DeleteUserInvitationResponse
+	21, // 81: com.spirl.api.v1.access.API.ListUserInvitations:output_type -> com.spirl.api.v1.access.ListUserInvitationsResponse
+	29, // 82: com.spirl.api.v1.access.API.CreateServiceAccount:output_type -> com.spirl.api.v1.access.CreateServiceAccountResponse
+	31, // 83: com.spirl.api.v1.access.API.ListServiceAccounts:output_type -> com.spirl.api.v1.access.ListServiceAccountsResponse
+	33, // 84: com.spirl.api.v1.access.API.GetServiceAccountInfo:output_type -> com.spirl.api.v1.access.GetServiceAccountInfoResponse
+	35, // 85: com.spirl.api.v1.access.API.UpdateServiceAccountRole:output_type -> com.spirl.api.v1.access.UpdateServiceAccountRoleResponse
+	37, // 86: com.spirl.api.v1.access.API.DeleteServiceAccount:output_type -> com.spirl.api.v1.access.DeleteServiceAccountResponse
+	39, // 87: com.spirl.api.v1.access.API.CreateServiceAccountKey:output_type -> com.spirl.api.v1.access.CreateServiceAccountKeyResponse
+	41, // 88: com.spirl.api.v1.access.API.DeleteServiceAccountKey:output_type -> com.spirl.api.v1.access.DeleteServiceAccountKeyResponse
+	43, // 89: com.spirl.api.v1.access.API.UpdateServiceAccountKeyStatus:output_type -> com.spirl.api.v1.access.UpdateServiceAccountKeyStatusResponse
+	3,  // 90: com.spirl.api.v1.access.API.ListAuditLogs:output_type -> com.spirl.api.v1.access.ListAuditLogsResponse
+	52, // 91: com.spirl.api.v1.access.API.UpdateOrgSettings:output_type -> com.spirl.api.v1.access.UpdateOrgSettingsResponse
+	54, // 92: com.spirl.api.v1.access.API.GetOrgSettings:output_type -> com.spirl.api.v1.access.GetOrgSettingsResponse
+	57, // 93: com.spirl.api.v1.access.API.AssignRoleAssignment:output_type -> com.spirl.api.v1.access.AssignRoleAssignmentResponse
+	59, // 94: com.spirl.api.v1.access.API.RemoveRoleAssignment:output_type -> com.spirl.api.v1.access.RemoveRoleAssignmentResponse
+	61, // 95: com.spirl.api.v1.access.API.ListRoleAssignments:output_type -> com.spirl.api.v1.access.ListRoleAssignmentsResponse
+	73, // [73:96] is the sub-list for method output_type
+	50, // [50:73] is the sub-list for method input_type
+	50, // [50:50] is the sub-list for extension type_name
+	50, // [50:50] is the sub-list for extension extendee
+	0,  // [0:50] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_accessapi_api_proto_init() }
@@ -4269,6 +5517,198 @@ func file_api_v1_accessapi_api_proto_init() {
 				return nil
 			}
 		}
+		file_api_v1_accessapi_api_proto_msgTypes[48].Exporter = func(v any, i int) any {
+			switch v := v.(*UpdateOrgSettingsRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[49].Exporter = func(v any, i int) any {
+			switch v := v.(*UpdateOrgSettingsResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[50].Exporter = func(v any, i int) any {
+			switch v := v.(*GetOrgSettingsRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[51].Exporter = func(v any, i int) any {
+			switch v := v.(*GetOrgSettingsResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[52].Exporter = func(v any, i int) any {
+			switch v := v.(*OrgSettings); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[53].Exporter = func(v any, i int) any {
+			switch v := v.(*AssignRoleAssignmentRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[54].Exporter = func(v any, i int) any {
+			switch v := v.(*AssignRoleAssignmentResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[55].Exporter = func(v any, i int) any {
+			switch v := v.(*RemoveRoleAssignmentRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[56].Exporter = func(v any, i int) any {
+			switch v := v.(*RemoveRoleAssignmentResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[57].Exporter = func(v any, i int) any {
+			switch v := v.(*ListRoleAssignmentsRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[58].Exporter = func(v any, i int) any {
+			switch v := v.(*ListRoleAssignmentsResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[59].Exporter = func(v any, i int) any {
+			switch v := v.(*RealmRoleAssignment); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[60].Exporter = func(v any, i int) any {
+			switch v := v.(*RoleAssignment); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[61].Exporter = func(v any, i int) any {
+			switch v := v.(*ListRolesRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[62].Exporter = func(v any, i int) any {
+			switch v := v.(*ListRolesResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_accessapi_api_proto_msgTypes[63].Exporter = func(v any, i int) any {
+			switch v := v.(*Role); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_api_v1_accessapi_api_proto_msgTypes[2].OneofWrappers = []any{}
 	file_api_v1_accessapi_api_proto_msgTypes[4].OneofWrappers = []any{
@@ -4280,13 +5720,27 @@ func file_api_v1_accessapi_api_proto_init() {
 	file_api_v1_accessapi_api_proto_msgTypes[35].OneofWrappers = []any{
 		(*CreateServiceAccountKeyRequest_PkixPubkey)(nil),
 	}
+	file_api_v1_accessapi_api_proto_msgTypes[53].OneofWrappers = []any{
+		(*AssignRoleAssignmentRequest_ServiceAccountId)(nil),
+		(*AssignRoleAssignmentRequest_UserId)(nil),
+		(*AssignRoleAssignmentRequest_RealmRole)(nil),
+	}
+	file_api_v1_accessapi_api_proto_msgTypes[57].OneofWrappers = []any{
+		(*ListRoleAssignmentsRequest_ServiceAccountId)(nil),
+		(*ListRoleAssignmentsRequest_UserId)(nil),
+	}
+	file_api_v1_accessapi_api_proto_msgTypes[60].OneofWrappers = []any{
+		(*RoleAssignment_ServiceAccountId)(nil),
+		(*RoleAssignment_UserId)(nil),
+		(*RoleAssignment_RealmRole)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_v1_accessapi_api_proto_rawDesc,
-			NumEnums:      2,
-			NumMessages:   48,
+			NumEnums:      3,
+			NumMessages:   64,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

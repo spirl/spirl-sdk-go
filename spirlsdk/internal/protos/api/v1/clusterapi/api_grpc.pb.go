@@ -54,8 +54,8 @@ type APIClient interface {
 	ListClusterVersions(ctx context.Context, in *ListClusterVersionsRequest, opts ...grpc.CallOption) (*ListClusterVersionsResponse, error)
 	// List the workloads of the cluster/cluster-version.
 	//
-	// Typically, workloads issued within 24 hours are considered active. We don't
-	// have the workload usage data.
+	// A workload is considered active if an SVID issuance event exists with an expiration time in the
+	// future.
 	ListWorkloads(ctx context.Context, in *ListWorkloadsRequest, opts ...grpc.CallOption) (*ListWorkloadsResponse, error)
 	// List the nodes in a node group
 	ListNodes(ctx context.Context, in *ListNodesRequest, opts ...grpc.CallOption) (*ListNodesResponse, error)
@@ -192,8 +192,8 @@ type APIServer interface {
 	ListClusterVersions(context.Context, *ListClusterVersionsRequest) (*ListClusterVersionsResponse, error)
 	// List the workloads of the cluster/cluster-version.
 	//
-	// Typically, workloads issued within 24 hours are considered active. We don't
-	// have the workload usage data.
+	// A workload is considered active if an SVID issuance event exists with an expiration time in the
+	// future.
 	ListWorkloads(context.Context, *ListWorkloadsRequest) (*ListWorkloadsResponse, error)
 	// List the nodes in a node group
 	ListNodes(context.Context, *ListNodesRequest) (*ListNodesResponse, error)
