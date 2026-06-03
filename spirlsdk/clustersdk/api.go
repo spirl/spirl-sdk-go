@@ -2,7 +2,10 @@ package clustersdk
 
 import (
 	"context"
+	"fmt"
 	"time"
+
+	"google.golang.org/grpc/codes"
 )
 
 type API interface {
@@ -11,6 +14,9 @@ type API interface {
 
 	// ListClusters lists clusters.
 	ListClusters(ctx context.Context, params ListClustersParams) (*ListClustersResult, error)
+
+	// DescribeClusters describes clusters.
+	DescribeClusters(ctx context.Context, params DescribeClustersParams) (*DescribeClustersResult, error)
 
 	// DeleteCluster deletes a cluster in a trust domain.
 	DeleteCluster(ctx context.Context, params DeleteClusterParams) (*DeleteClusterResult, error)
@@ -104,7 +110,55 @@ type ListClustersParams struct {
 }
 
 type ListClustersResult struct {
-	Clusters []Cluster
+	Clusters []ClusterItem
+}
+
+type DescribeClusterID struct {
+	// ClusterID identifies the cluster to describe
+	ClusterID string
+
+	// Name of the cluster. Can be used with TrustDomainID instead of ClusterID
+	Name string
+
+	// TrustDomainID the cluster belongs to. Can be used with Name instead of ClusterID
+	TrustDomainID string
+}
+
+type DescribeClustersParams struct {
+	IDs []DescribeClusterID
+}
+
+type DescribeClustersResult struct {
+	// Items contains per-input describe results. It matches
+	// DescribeClustersParams.IDs order and length 1:1.
+	Items []DescribeClusterItem
+}
+
+// DescribeClusterItem is the per-input result of DescribeClusters.
+type DescribeClusterItem struct {
+	// Cluster is the described cluster when Err is nil; otherwise it is the
+	// zero value.
+	Cluster Cluster
+	// Err is nil on success or *DescribeClusterError on failure. Callers can
+	// recover the structured detail with errors.As.
+	Err error
+}
+
+// DescribeClusterError reports a per-item failure from DescribeClusters.
+type DescribeClusterError struct {
+	// Code is the gRPC canonical code for the failure (e.g. codes.NotFound).
+	Code codes.Code
+	// Message is the per-item error detail.
+	Message string
+	// Field identifies which input field failed, when available.
+	Field string
+}
+
+func (e *DescribeClusterError) Error() string {
+	if e.Field != "" {
+		return fmt.Sprintf("%s: %s (field %q)", e.Code, e.Message, e.Field)
+	}
+	return fmt.Sprintf("%s: %s", e.Code, e.Message)
 }
 
 type DeleteClusterParams struct {
@@ -287,6 +341,32 @@ type Cluster struct {
 	// JWTCustomizationTemplate is the JWT customization template for additional
 	// JWT claims that will be added to JWT-SVIDs issued by this cluster.
 	JWTCustomizationTemplate string
+}
+
+type ClusterItem struct {
+	// ID identifies the cluster.
+	ID string
+
+	// CreatedAt is a timestamp of when this cluster was created.
+	CreatedAt time.Time
+
+	// Name is the cluster name.
+	Name string
+
+	// Description is the cluster description.
+	Description string
+
+	// Platform is the platform hosting the cluster.
+	Platform Platform
+
+	// Org ID this cluster is associated with
+	OrgID string
+
+	// Trust Domain ID this cluster is associated with
+	TrustDomainID string
+
+	// Optional. The ID of the realm this cluster belongs to.
+	RealmID *string
 }
 
 type ClusterVersion struct {

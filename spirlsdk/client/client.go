@@ -11,6 +11,7 @@ import (
 	"github.com/spirl/spirl-sdk-go/spirlsdk/auth"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/cicdsdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/clustersdk"
+	"github.com/spirl/spirl-sdk-go/spirlsdk/configsdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/devidentitysdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/federationsdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/internal/grpcproxy"
@@ -28,6 +29,7 @@ type Client struct {
 	access              accesssdk.API
 	cicd                cicdsdk.API
 	cluster             clustersdk.API
+	config              configsdk.API
 	devIdentity         devidentitysdk.API
 	federation          federationsdk.API
 	providerAttestation providerattestationsdk.API
@@ -43,13 +45,15 @@ func New(auth auth.Authenticator, opts ...Option) (*Client, error) {
 	options.Apply(&cfg, opts,
 		WithLogger(slog.Default()),
 		WithEndpoint(defaultEndpoint),
+		WithCallingClient("sdk", ""),
 	)
 
 	authInterceptor := newAuthInterceptor(cfg.log, auth, cfg.tokenStore)
 
 	dialOptions := []grpc.DialOption{
 		grpc.WithTransportCredentials(credentials.NewTLS(nil)),
-		grpc.WithUnaryInterceptor(authInterceptor.interceptUnary),
+		grpc.WithChainUnaryInterceptor(authInterceptor.interceptUnary, clientUnaryClientInterceptor(cfg.callingClient, cfg.callingClientVersion)),
+		grpc.WithChainStreamInterceptor(clientStreamClientInterceptor(cfg.callingClient, cfg.callingClientVersion)),
 	}
 
 	target := cfg.endpoint
@@ -74,6 +78,7 @@ func New(auth auth.Authenticator, opts ...Option) (*Client, error) {
 		access:              makeAccessAPI(conn),
 		cicd:                makeCICDAPI(conn),
 		cluster:             makeClusterAPI(conn),
+		config:              makeConfigAPI(conn),
 		devIdentity:         makeDevIdentityAPI(conn),
 		federation:          makeFederationAPI(conn),
 		providerAttestation: makeProviderattestationAPI(conn),
@@ -110,6 +115,11 @@ func (c *Client) CICD() cicdsdk.API {
 // Cluster returns the Cluster SDK API interface.
 func (c *Client) Cluster() clustersdk.API {
 	return c.cluster
+}
+
+// Config returns the Config SDK API interface.
+func (c *Client) Config() configsdk.API {
+	return c.config
 }
 
 // DevIdentity returns the Developer Identity SDK API interface.

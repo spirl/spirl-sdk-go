@@ -6,7 +6,6 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/spirl/spirl-sdk-go/spirlsdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/accesssdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/internal/protos/api/v1/accessapi"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/internal/xerrors"
@@ -317,7 +316,7 @@ func (a accessAPI) AssignUserRealmRole(ctx context.Context, params accesssdk.Ass
 		return nil, xerrors.UnexpectedResponseField("assignment_id")
 	}
 
-	return &accesssdk.AssignUserRealmRoleResult{AssignmentID: resp.AssignmentId}, nil
+	return &accesssdk.AssignUserRealmRoleResult{AssignmentID: resp.AssignmentId, CreatedAt: resp.CreatedAt.AsTime()}, nil
 }
 
 func (a accessAPI) AssignServiceAccountRealmRole(ctx context.Context, params accesssdk.AssignServiceAccountRealmRoleParams) (*accesssdk.AssignServiceAccountRealmRoleResult, error) {
@@ -340,7 +339,7 @@ func (a accessAPI) AssignServiceAccountRealmRole(ctx context.Context, params acc
 		return nil, xerrors.UnexpectedResponseField("assignment_id")
 	}
 
-	return &accesssdk.AssignServiceAccountRealmRoleResult{AssignmentID: resp.AssignmentId}, nil
+	return &accesssdk.AssignServiceAccountRealmRoleResult{AssignmentID: resp.AssignmentId, CreatedAt: resp.CreatedAt.AsTime()}, nil
 }
 
 func (a accessAPI) ListUserRealmRoleAssignments(ctx context.Context, params accesssdk.ListUserRealmRoleAssignmentsParams) (*accesssdk.ListUserRealmRoleAssignmentsResult, error) {
@@ -379,6 +378,24 @@ func (a accessAPI) ListServiceAccountRealmRoleAssignments(ctx context.Context, p
 	return &accesssdk.ListServiceAccountRealmRoleAssignmentsResult{Assignments: assignments}, nil
 }
 
+func (a accessAPI) ListAssignmentIDRealmRoleAssignments(ctx context.Context, params accesssdk.ListAssignmentIDRealmRoleAssignmentsParams) (*accesssdk.ListAssignmentIDRealmRoleAssignmentsResult, error) {
+	req := &accessapi.ListRoleAssignmentsRequest{
+		Principal: &accessapi.ListRoleAssignmentsRequest_AssignmentId{AssignmentId: params.AssignmentID},
+	}
+
+	resp, err := a.client.ListRoleAssignments(ctx, req)
+	if err != nil {
+		return nil, xerrors.Convert(err)
+	}
+
+	assignments, err := convertSlice(resp.Assignments, roleAssignmentFromAPI)
+	if err != nil {
+		return nil, err
+	}
+
+	return &accesssdk.ListAssignmentIDRealmRoleAssignmentsResult{Assignments: assignments}, nil
+}
+
 func (a accessAPI) RemoveRealmRoleAssignment(ctx context.Context, params accesssdk.RemoveRealmRoleAssignmentParams) (*accesssdk.RemoveRealmRoleAssignmentResult, error) {
 	req := &accessapi.RemoveRoleAssignmentRequest{
 		AssignmentId: params.AssignmentID,
@@ -389,46 +406,6 @@ func (a accessAPI) RemoveRealmRoleAssignment(ctx context.Context, params accesss
 	}
 
 	return &accesssdk.RemoveRealmRoleAssignmentResult{}, nil
-}
-
-func (a accessAPI) ListAuditLogs(ctx context.Context, params accesssdk.ListAuditLogsParams) (*accesssdk.ListAuditLogsResult, error) {
-	filter := &accessapi.AuditLogFilter{
-		ByTrustDomainId:   optionalValue1(params.Filter.TrustDomainID, ptrOf),
-		ByTrustDomainName: optionalValue1(params.Filter.TrustDomainName, ptrOf),
-		ByRequestId:       optionalValue1(params.Filter.RequestID, ptrOf),
-		BySource:          optionalValue2(params.Filter.Source, auditLogSourceToAPI, ptrOf),
-		ByService:         optionalValue1(params.Filter.Service, ptrOf),
-		ByMethod:          optionalValue1(params.Filter.Method, ptrOf),
-		ByActorId:         optionalValue1(params.Filter.ActorID, ptrOf),
-		ByActorType:       optionalValue2(params.Filter.ActorType, auditLogActorToAPI, ptrOf),
-		ByActorEmail:      optionalValue1(params.Filter.ActorEmail, ptrOf),
-		ByActorName:       optionalValue1(params.Filter.ActorName, ptrOf),
-		ByActorKeyId:      optionalValue1(params.Filter.ActorKeyID, ptrOf),
-		ByStatusCode:      optionalValue1(params.Filter.StatusCode, ptrOf),
-	}
-
-	req := &accessapi.ListAuditLogsRequest{
-		PageSize:  params.Page.Limit,
-		PageToken: params.Page.Token,
-		Filter:    messageOrNilIfEmpty(filter),
-		StartTime: optionalValue1(params.Filter.StartTime, timeToAPI),
-		EndTime:   optionalValue1(params.Filter.EndTime, timeToAPI),
-	}
-
-	resp, err := a.client.ListAuditLogs(ctx, req)
-	if err != nil {
-		return nil, xerrors.Convert(err)
-	}
-
-	logs, err := convertSlice(resp.Logs, auditLogFromAPI)
-	if err != nil {
-		return nil, err
-	}
-
-	return &accesssdk.ListAuditLogsResult{
-		Page:      spirlsdk.PageResult{NextToken: resp.NextPageToken},
-		AuditLogs: logs,
-	}, nil
 }
 
 func roleAssignmentFromAPI(in *accessapi.RoleAssignment) (accesssdk.RoleAssignment, error) {
@@ -598,122 +575,4 @@ func serviceAccountKeyFromAPI(in *accessapi.ServiceAccountKey) (accesssdk.Servic
 		PublicKey:        publicKey,
 		CreatedAt:        timeFromAPI(in.CreatedAt),
 	}, nil
-}
-
-func auditLogSourceFromAPI(in accessapi.AuditLogSource) (accesssdk.AuditLogSource, error) {
-	switch in {
-	case accessapi.AuditLogSource_AUDIT_LOG_SOURCE_UNKNOWN:
-		return "", nil
-	case accessapi.AuditLogSource_AUDIT_LOG_SOURCE_AUTOMATED:
-		return accesssdk.AuditLogSourceAutomated, nil
-	case accessapi.AuditLogSource_AUDIT_LOG_SOURCE_USER:
-		return accesssdk.AuditLogSourceUser, nil
-	}
-	return "", fmt.Errorf("%w: audit log source %d", xerrors.UnexpectedResponseField("audit_log_source"), in)
-}
-
-func auditLogSourceToAPI(in accesssdk.AuditLogSource) accessapi.AuditLogSource {
-	switch in {
-	case "":
-		return accessapi.AuditLogSource_AUDIT_LOG_SOURCE_UNKNOWN
-	case accesssdk.AuditLogSourceAutomated:
-		return accessapi.AuditLogSource_AUDIT_LOG_SOURCE_AUTOMATED
-	case accesssdk.AuditLogSourceUser:
-		return accessapi.AuditLogSource_AUDIT_LOG_SOURCE_USER
-	}
-	return 0
-}
-
-func auditLogActorToAPI(in accesssdk.AuditLogActorType) accessapi.AuditLogActorType {
-	switch in {
-	case "":
-		return accessapi.AuditLogActorType_AUDIT_LOG_ACTOR_TYPE_UNKNOWN
-	case accesssdk.AuditLogActorTypeUser:
-		return accessapi.AuditLogActorType_AUDIT_LOG_ACTOR_TYPE_USER
-	case accesssdk.AuditLogActorTypeServiceAccount:
-		return accessapi.AuditLogActorType_AUDIT_LOG_ACTOR_TYPE_SERVICE_ACCOUNT
-	case accesssdk.AuditLogActorTypeAdmin:
-		return accessapi.AuditLogActorType_AUDIT_LOG_ACTOR_TYPE_ADMIN
-	}
-	return 0
-}
-
-func auditLogFromAPI(in *accessapi.AuditLog) (accesssdk.AuditLog, error) {
-	actor, err := auditActorFromAPI(in.Actor)
-	if err != nil {
-		return accesssdk.AuditLog{}, err
-	}
-
-	source, err := auditLogSourceFromAPI(in.Source)
-	if err != nil {
-		return accesssdk.AuditLog{}, err
-	}
-
-	return accesssdk.AuditLog{
-		Actor:       actor,
-		Timestamp:   timeFromAPI(in.Ts),
-		TrustDomain: accessTrustDomainFromAPI(in.TrustDomain),
-		Source:      source,
-		RequestID:   in.RequestId,
-		Request:     auditRequestFromAPI(in.Request),
-		StatusCode:  in.Status,
-	}, nil
-}
-
-func auditActorFromAPI(in *accessapi.Actor) (accesssdk.AuditActor, error) {
-	if in == nil {
-		return nil, nil // nolint: nilnil // intentional
-	}
-	switch actor := in.Actor.(type) {
-	case *accessapi.Actor_User:
-		if actor.User == nil {
-			// purely defensive; should always be non-nil if the oneof is set.
-			return nil, xerrors.UnexpectedResponseField("audit_log.actor.user")
-		}
-		return accesssdk.UserActor{
-			ID:    actor.User.Id,
-			Email: actor.User.Email,
-		}, nil
-	case *accessapi.Actor_ServiceAccount:
-		if actor.ServiceAccount == nil {
-			// purely defensive; should always be non-nil if the oneof is set.
-			return nil, xerrors.UnexpectedResponseField("audit_log.actor.service_account")
-		}
-		return accesssdk.ServiceAccountActor{
-			ID:    actor.ServiceAccount.Id,
-			Name:  actor.ServiceAccount.Name,
-			KeyID: actor.ServiceAccount.KeyId,
-		}, nil
-	case *accessapi.Actor_SpirlAdmin:
-		if actor.SpirlAdmin == nil {
-			// purely defensive; should always be non-nil if the oneof is set.
-			return nil, xerrors.UnexpectedResponseField("audit_log.actor.spirl_admin")
-		}
-		return accesssdk.SPIRLAdminActor{
-			ID:    actor.SpirlAdmin.Id,
-			Email: actor.SpirlAdmin.Email,
-		}, nil
-	}
-	return nil, xerrors.UnexpectedResponseType("audit_log.actor", in.Actor)
-}
-
-func accessTrustDomainFromAPI(req *accessapi.TrustDomain) accesssdk.TrustDomain {
-	if req == nil {
-		return accesssdk.TrustDomain{} //nolint: exhaustruct // zero value ok
-	}
-	return accesssdk.TrustDomain{
-		ID:   req.Id,
-		Name: req.Name,
-	}
-}
-
-func auditRequestFromAPI(req *accessapi.Request) accesssdk.AuditedRequest {
-	if req == nil {
-		return accesssdk.AuditedRequest{} //nolint: exhaustruct // zero value ok
-	}
-	return accesssdk.AuditedRequest{
-		Service: req.Service,
-		Method:  req.Method,
-		Message: req.Message,
-	}
 }

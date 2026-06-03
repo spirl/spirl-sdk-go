@@ -3,10 +3,6 @@ package accesssdk
 import (
 	"context"
 	"time"
-
-	"google.golang.org/protobuf/types/known/anypb"
-
-	"github.com/spirl/spirl-sdk-go/spirlsdk"
 )
 
 type API interface {
@@ -72,11 +68,11 @@ type API interface {
 	// ListServiceAccountRealmRoleAssignments lists realm role assignments for a service account.
 	ListServiceAccountRealmRoleAssignments(ctx context.Context, params ListServiceAccountRealmRoleAssignmentsParams) (*ListServiceAccountRealmRoleAssignmentsResult, error)
 
+	// ListAssignmentIDRealmRoleAssignments lists realm role assignments for an assignment ID.
+	ListAssignmentIDRealmRoleAssignments(ctx context.Context, params ListAssignmentIDRealmRoleAssignmentsParams) (*ListAssignmentIDRealmRoleAssignmentsResult, error)
+
 	// RemoveRealmRoleAssignment removes a realm role assignment from any principal.
 	RemoveRealmRoleAssignment(ctx context.Context, params RemoveRealmRoleAssignmentParams) (*RemoveRealmRoleAssignmentResult, error)
-
-	// ListAuditLogs returns audit logs for the organization.
-	ListAuditLogs(ctx context.Context, params ListAuditLogsParams) (*ListAuditLogsResult, error)
 }
 
 type ListOrgRolesParams struct{}
@@ -289,11 +285,17 @@ type AssignServiceAccountRealmRoleParams struct {
 type AssignUserRealmRoleResult struct {
 	// AssignmentID identifies the created realm role assignment.
 	AssignmentID string
+
+	// CreatedAt is when the assignment was created.
+	CreatedAt time.Time
 }
 
 type AssignServiceAccountRealmRoleResult struct {
 	// AssignmentID identifies the created realm role assignment.
 	AssignmentID string
+
+	// CreatedAt is when the assignment was created.
+	CreatedAt time.Time
 }
 
 type RemoveRealmRoleAssignmentParams struct {
@@ -313,6 +315,11 @@ type ListServiceAccountRealmRoleAssignmentsParams struct {
 	ServiceAccountID string
 }
 
+type ListAssignmentIDRealmRoleAssignmentsParams struct {
+	// AssignmentID identifies the assignment unique id whose realm role assignments are listed. Required.
+	AssignmentID string
+}
+
 type ListUserRealmRoleAssignmentsResult struct {
 	// Assignments are the realm role assignments for the user.
 	Assignments []RoleAssignment
@@ -320,6 +327,11 @@ type ListUserRealmRoleAssignmentsResult struct {
 
 type ListServiceAccountRealmRoleAssignmentsResult struct {
 	// Assignments are the realm role assignments for the service account.
+	Assignments []RoleAssignment
+}
+
+type ListAssignmentIDRealmRoleAssignmentsResult struct {
+	// Assignments are the realm role assignments for the assignment ID.
 	Assignments []RoleAssignment
 }
 
@@ -362,100 +374,6 @@ type ServiceAccountRoleAssignmentPrincipal struct {
 }
 
 func (ServiceAccountRoleAssignmentPrincipal) roleAssignmentPrincipal() {}
-
-type ListAuditLogsParams struct {
-	// Page provides parameters for paging the list.
-	Page spirlsdk.PageParams
-
-	// Filter filters the results.
-	Filter AuditLogFilter
-}
-
-type ListAuditLogsResult struct {
-	// Page contains required information for listing the next page.
-	Page spirlsdk.PageResult
-
-	// AuditLogs are the available audit logs. If a filter was used, these
-	// logs are the subset that passed the filter.
-	AuditLogs []AuditLog
-}
-
-type AuditLogFilter struct {
-	// TrustDomainID filters audit logs to those with the the given trust
-	// domain. Optional.
-	TrustDomainID *string
-
-	// TrustDomainName filters audit logs to those with the given trust domain
-	// name. Optional.
-	TrustDomainName *string
-
-	// RequestID filters audit logs to those with the given request ID.
-	// Optional.
-	RequestID *string
-
-	// Source filters audit logs to those with the given source. Optional.
-	Source *AuditLogSource
-
-	// Service filters audit logs to those with the given service. Optional.
-	Service *string
-
-	// Method filters audit logs to those with the given method. Optional.
-	Method *string
-
-	// ActorID filters audit logs to those with the given actor ID. Optional.
-	ActorID *string
-
-	// ActorType filters audit logs to those with the given actor type. Optional.
-	ActorType *AuditLogActorType
-
-	// ActorEmail filters audit logs to those with the given actor email. Optional.
-	ActorEmail *string
-
-	// ActorName filters audit logs to those with the given actor name. Optional.
-	ActorName *string
-
-	// ActorKeyID filters audit logs to those with the given actor key ID. Optional.
-	ActorKeyID *string
-
-	// StatusCode filters audit logs to those with the given status code. Optional.
-	StatusCode *int32
-
-	// StartTime filters logs to those logged at or after the given time. If unset
-	// the current time is used. Optional.
-	StartTime *time.Time
-
-	// EndTime filters logs to those logged at or before the given time. If unset
-	// the current time minus 24 hours is used. Optional.
-	EndTime *time.Time
-}
-
-type AuditLogSource string
-
-const (
-	// AuditLogSourceAutomated indicates that the audit log entry was the
-	// result of an automated action.
-	AuditLogSourceAutomated = AuditLogSource("automated")
-
-	// AuditLogSourceUser indicates that the audit log entry was the result
-	// of a user-initiated action.
-	AuditLogSourceUser = AuditLogSource("user")
-)
-
-type AuditLogActorType string
-
-const (
-	// AuditLogActorTypeUser indicates that a user performed the action
-	// that was audited.
-	AuditLogActorTypeUser = AuditLogActorType("user")
-
-	// AuditLogActorTypeUser indicates that a service account performed the
-	// action that was audited.
-	AuditLogActorTypeServiceAccount = AuditLogActorType("serviceAccount")
-
-	// AuditLogActorTypeAdmin indicates that a SPIRL admin performed the
-	// action that was audited.
-	AuditLogActorTypeAdmin = AuditLogActorType("admin")
-)
 
 type OrgRole struct {
 	// ID identifies the org role.
@@ -573,85 +491,3 @@ const (
 	// SSOProviderGoogle indicates that the user signs on Google SSO.
 	SSOProviderGoogle = SSOProvider("google")
 )
-
-type AuditLog struct {
-	// Actor is the persona who took action.
-	Actor AuditActor
-
-	// Timestamp is when the action occurred.
-	Timestamp time.Time
-
-	// TrustDomain identifies which trust domain the action occurred in.
-	TrustDomain TrustDomain
-
-	// Source identifies the source of the action (e.g. user initiated or not)
-	Source AuditLogSource
-
-	// RequestID identifies the
-	RequestID string
-
-	// Request contain details of the request that initiated the action.
-	Request AuditedRequest
-
-	// StatusCode is the status of the request. It may not be available if
-	// the request was not completed.
-	StatusCode *int32
-}
-
-type AuditedRequest struct {
-	// Service is the request service.
-	Service string
-
-	// Method is the request method.
-	Method string
-
-	// Message is the request payload.
-	Message *anypb.Any
-}
-
-type AuditActor interface {
-	auditActor()
-}
-
-type UserActor struct {
-	// ID identifies the user who performed the action.
-	ID string
-
-	// Email is the email address of the user who performed the action.
-	Email string
-}
-
-func (UserActor) auditActor() {}
-
-type ServiceAccountActor struct {
-	// ID identifies the service account who performed the action.
-	ID string
-
-	// Name is the name service account who performed the action.
-	Name string
-
-	// KeyID identifies which service account key was used to authenticate
-	// the service account who performed the action.
-	KeyID string
-}
-
-func (ServiceAccountActor) auditActor() {}
-
-type SPIRLAdminActor struct {
-	// ID identifies the SPIRL admin who performed the action.
-	ID string
-
-	// Email identifies the email address of the SPIRL admin who performed
-	// the action.
-	Email string
-}
-
-func (SPIRLAdminActor) auditActor() {}
-
-type TrustDomain struct {
-	// ID identifies the trust domain the action took place in.
-	ID string
-
-	// Name is the name of the trust domain the action took place in.
-	Name string
-}

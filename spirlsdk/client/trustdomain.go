@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"google.golang.org/grpc"
 
@@ -23,6 +24,7 @@ func (a trustDomainAPI) CreateTrustDomain(ctx context.Context, params trustdomai
 	req := &trustdomainapi.CreateTrustDomainRequest{
 		Name:        params.Name,
 		Description: optionalValue(params.Description),
+		JwtIssuer:   jwtIssuerConfigToAPI(params.JwtIssuerConfig),
 	}
 
 	resp, err := a.client.CreateTrustDomain(ctx, req)
@@ -40,6 +42,7 @@ func (a trustDomainAPI) RegisterTrustDomain(ctx context.Context, params trustdom
 	req := &trustdomainapi.RegisterTrustDomainRequest{
 		Name:        params.Name,
 		Description: optionalValue(params.Description),
+		JwtIssuer:   jwtIssuerConfigToAPI(params.JwtIssuerConfig),
 	}
 
 	resp, err := a.client.RegisterTrustDomain(ctx, req)
@@ -52,6 +55,19 @@ func (a trustDomainAPI) RegisterTrustDomain(ctx context.Context, params trustdom
 	}, nil
 }
 
+func (a trustDomainAPI) UpdateTrustDomain(ctx context.Context, params trustdomainsdk.UpdateTrustDomainParams) (*trustdomainsdk.UpdateTrustDomainResult, error) {
+	req := &trustdomainapi.UpdateTrustDomainRequest{
+		TrustDomainId: params.ID,
+		JwtIssuer:     jwtIssuerConfigToAPI(params.JwtIssuerConfig),
+	}
+
+	if _, err := a.client.UpdateTrustDomain(ctx, req); err != nil {
+		return nil, xerrors.Convert(err)
+	}
+
+	return &trustdomainsdk.UpdateTrustDomainResult{}, nil
+}
+
 func (a trustDomainAPI) TrustDomainInfo(ctx context.Context, params trustdomainsdk.TrustDomainInfoParams) (*trustdomainsdk.TrustDomainInfoResult, error) {
 	req := &trustdomainapi.TrustDomainInfoRequest{
 		TrustDomainId: params.ID,
@@ -62,25 +78,103 @@ func (a trustDomainAPI) TrustDomainInfo(ctx context.Context, params trustdomains
 		return nil, xerrors.Convert(err)
 	}
 
+	jwtIssuerStatus := jwtIssuerStatusFromAPI(resp.JwtIssuerStatus)
+
 	return &trustdomainsdk.TrustDomainInfoResult{
 		TrustDomain: trustdomainsdk.TrustDomain{
-			ID:            resp.Id,
-			CreatedAt:     timeFromAPI(resp.CreatedAt),
-			UpdatedAt:     timeFromAPI(resp.UpdatedAt),
-			Name:          resp.Name,
-			Description:   resp.Description,
-			State:         trustDomainStateFromAPI(resp.State),
-			IsSelfManaged: resp.IsSelfManaged,
-			JWTIssuer:     resp.JwtIssuerEndpointUrl,
+			ID:              resp.Id,
+			CreatedAt:       timeFromAPI(resp.CreatedAt),
+			UpdatedAt:       timeFromAPI(resp.UpdatedAt),
+			Name:            resp.Name,
+			Description:     resp.Description,
+			State:           trustDomainStateFromAPI(resp.State),
+			IsSelfManaged:   resp.IsSelfManaged,
+			JWTIssuer:       effectiveIssuerFromStatus(jwtIssuerStatus),
+			JwtIssuerStatus: jwtIssuerStatus,
 			URLs: trustdomainsdk.TrustDomainURLs{
 				AgentEndpointURL:         resp.SpirlAgentEndpointUrl,
 				SPIFFEBundleEndpointURL:  resp.SpiffeBundleEndpointUrl,
-				OIDCDiscoveryEndpointURL: resp.OidcDiscoveryEndpointUrl,
+				OIDCDiscoveryEndpointURL: oidcDiscoveryFromStatus(jwtIssuerStatus),
 				JWKSEndpointURL:          resp.JwksEndpointUrl,
 			},
 			Status: nil, // not returned from TrustDomainInfo
 		},
 	}, nil
+}
+
+func (a trustDomainAPI) TrustDomainSigningAuthorityStatus(ctx context.Context, params trustdomainsdk.TrustDomainSigningAuthorityStatusParams) (*trustdomainsdk.TrustDomainSigningAuthorityStatusResult, error) {
+	req := &trustdomainapi.TrustDomainSigningAuthorityStatusRequest{
+		TrustDomainId: params.ID,
+	}
+
+	resp, err := a.client.TrustDomainSigningAuthorityStatus(ctx, req)
+	if err != nil {
+		return nil, xerrors.Convert(err)
+	}
+
+	result := &trustdomainsdk.TrustDomainSigningAuthorityStatusResult{
+		SigningAuthorityStatuses: make([]trustdomainsdk.SigningAuthorityStatus, 0, len(resp.SigningAuthorityStatuses)),
+	}
+	for _, s := range resp.SigningAuthorityStatuses {
+		result.SigningAuthorityStatuses = append(result.SigningAuthorityStatuses, signingAuthorityStatusFromAPI(s))
+	}
+	return result, nil
+}
+
+func signingAuthorityStatusFromAPI(api *trustdomainapi.SigningAuthorityStatus) trustdomainsdk.SigningAuthorityStatus {
+	result := trustdomainsdk.SigningAuthorityStatus{
+		TrustDomainDeploymentID:   api.TrustDomainDeploymentId,
+		TrustDomainDeploymentName: api.TrustDomainDeploymentName,
+		RotationSchedule:          bundleRotationScheduleFromAPI(api.RotationSchedule),
+		SigningKeys:               make([]trustdomainsdk.SigningKey, 0, len(api.SigningKeys)),
+	}
+	for _, key := range api.SigningKeys {
+		result.SigningKeys = append(result.SigningKeys, signingKeyFromAPI(key))
+	}
+	return result
+}
+
+func bundleRotationScheduleFromAPI(api *trustdomainapi.BundleRotationSchedule) *trustdomainsdk.BundleRotationSchedule {
+	if api == nil {
+		return nil
+	}
+	return &trustdomainsdk.BundleRotationSchedule{
+		LastRotatedAt:        timeFromAPI(api.LastRotatedAt),
+		PreparationThreshold: api.PreparationThreshold.AsDuration(),
+		ActivationThreshold:  api.ActivationThreshold.AsDuration(),
+	}
+}
+
+func signingKeyFromAPI(api *trustdomainapi.SigningKey) trustdomainsdk.SigningKey {
+	var keyType trustdomainsdk.SigningKeyType
+	switch api.KeyType {
+	case trustdomainapi.SigningKey_KEY_TYPE_UNSPECIFIED:
+		keyType = trustdomainsdk.SigningKeyTypeUnspecified
+	case trustdomainapi.SigningKey_KEY_TYPE_X509:
+		keyType = trustdomainsdk.SigningKeyTypeX509
+	case trustdomainapi.SigningKey_KEY_TYPE_JWT:
+		keyType = trustdomainsdk.SigningKeyTypeJWT
+	}
+
+	var state trustdomainsdk.SigningKeyState
+	switch api.State {
+	case trustdomainapi.SigningKey_STATE_UNSPECIFIED:
+		state = trustdomainsdk.SigningKeyStateUnspecified
+	case trustdomainapi.SigningKey_STATE_ACTIVE:
+		state = trustdomainsdk.SigningKeyStateActive
+	case trustdomainapi.SigningKey_STATE_PREPARED:
+		state = trustdomainsdk.SigningKeyStatePrepared
+	case trustdomainapi.SigningKey_STATE_TAINTED:
+		state = trustdomainsdk.SigningKeyStateTainted
+	}
+
+	return trustdomainsdk.SigningKey{
+		KeyType:   keyType,
+		KeyID:     api.KeyId,
+		IssuedAt:  timeFromAPI(api.IssuedAt),
+		ExpiresAt: timeFromAPI(api.ExpiresAt),
+		State:     state,
+	}
 }
 
 func (a trustDomainAPI) ListTrustDomains(ctx context.Context, params trustdomainsdk.ListTrustDomainsParams) (*trustdomainsdk.ListTrustDomainsResult, error) {
@@ -117,7 +211,8 @@ func (a trustDomainAPI) DeleteTrustDomain(ctx context.Context, params trustdomai
 
 func (a trustDomainAPI) ListTrustDomainDeployments(ctx context.Context, params trustdomainsdk.ListTrustDomainDeploymentsParams) (*trustdomainsdk.ListTrustDomainDeploymentsResult, error) {
 	req := &trustdomainapi.ListTrustDomainDeploymentsRequest{
-		TrustDomainId: optionalValue(params.Filter.TrustDomainID),
+		TrustDomainId:      optionalValue(params.Filter.TrustDomainID),
+		IncludeDynamicData: false,
 	}
 
 	resp, err := a.client.ListTrustDomainDeployments(ctx, req)
@@ -231,20 +326,23 @@ func (a trustDomainAPI) DeleteTrustDomainKey(ctx context.Context, params trustdo
 }
 
 func trustDomainFromAPI(api *trustdomainapi.TrustDomain, includeStatus bool) (trustdomainsdk.TrustDomain, error) {
+	jwtIssuerStatus := jwtIssuerStatusFromAPI(api.JwtIssuerStatus)
+
 	out := trustdomainsdk.TrustDomain{
-		ID:            api.Id,
-		CreatedAt:     timeFromAPI(api.CreatedAt),
-		UpdatedAt:     timeFromAPI(api.UpdatedAt),
-		Name:          api.Name,
-		Description:   api.Description,
-		State:         trustDomainStateFromAPI(api.State),
-		IsSelfManaged: api.IsSelfManaged,
-		JWTIssuer:     api.JwtIssuerEndpointUrl,
+		ID:              api.Id,
+		CreatedAt:       timeFromAPI(api.CreatedAt),
+		UpdatedAt:       timeFromAPI(api.UpdatedAt),
+		Name:            api.Name,
+		Description:     api.Description,
+		State:           trustDomainStateFromAPI(api.State),
+		IsSelfManaged:   api.IsSelfManaged,
+		JWTIssuer:       effectiveIssuerFromStatus(jwtIssuerStatus),
+		JwtIssuerStatus: jwtIssuerStatus,
 		URLs: trustdomainsdk.TrustDomainURLs{
 			AgentEndpointURL:         api.EndpointUrl,
 			SPIFFEBundleEndpointURL:  api.SpiffeBundleEndpointUrl,
 			JWKSEndpointURL:          api.JwksEndpointUrl,
-			OIDCDiscoveryEndpointURL: api.OidcDiscoveryEndpointUrl,
+			OIDCDiscoveryEndpointURL: oidcDiscoveryFromStatus(jwtIssuerStatus),
 		},
 		Status: nil, // set below if includeStatus is true
 	}
@@ -318,4 +416,53 @@ func trustDomainKeyFromAPI(api *trustdomainapi.TrustDomainKey) (trustdomainsdk.T
 
 func trustDomainKeyStateFromAPI(state string) trustdomainsdk.TrustDomainKeyState {
 	return trustdomainsdk.TrustDomainKeyState(state)
+}
+
+func effectiveIssuerFromStatus(status *trustdomainsdk.JwtIssuerStatus) string {
+	if status == nil {
+		return ""
+	}
+	return status.EffectiveIssuer
+}
+
+func oidcDiscoveryFromStatus(status *trustdomainsdk.JwtIssuerStatus) string {
+	issuer := effectiveIssuerFromStatus(status)
+	if issuer == "" {
+		return ""
+	}
+	return issuer + "/.well-known/openid-configuration"
+}
+
+func jwtIssuerConfigToAPI(config *trustdomainsdk.JwtIssuerConfig) *trustdomainapi.JwtIssuerConfig {
+	if config == nil {
+		return nil
+	}
+	return &trustdomainapi.JwtIssuerConfig{
+		Set:    config.Set,
+		Issuer: config.Issuer,
+	}
+}
+
+func jwtIssuerStatusFromAPI(status *trustdomainapi.JwtIssuerStatus) *trustdomainsdk.JwtIssuerStatus {
+	if status == nil {
+		return nil
+	}
+	return &trustdomainsdk.JwtIssuerStatus{
+		Mode:            jwtIssuerModeFromAPI(status.Mode),
+		EffectiveIssuer: status.EffectiveIssuer,
+	}
+}
+
+func jwtIssuerModeFromAPI(mode trustdomainapi.JwtIssuerStatus_Mode) trustdomainsdk.JwtIssuerMode {
+	switch mode {
+	case trustdomainapi.JwtIssuerStatus_MODE_BUILTIN:
+		return trustdomainsdk.JwtIssuerModeBuiltin
+	case trustdomainapi.JwtIssuerStatus_MODE_DISABLED:
+		return trustdomainsdk.JwtIssuerModeDisabled
+	case trustdomainapi.JwtIssuerStatus_MODE_CUSTOM:
+		return trustdomainsdk.JwtIssuerModeCustom
+	default:
+		slog.Warn("Unknown JWT issuer mode from API, defaulting to builtin", slog.Any("mode", mode))
+		return trustdomainsdk.JwtIssuerModeBuiltin
+	}
 }

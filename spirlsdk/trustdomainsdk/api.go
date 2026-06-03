@@ -13,6 +13,9 @@ type API interface {
 	// deployments.
 	RegisterTrustDomain(ctx context.Context, params RegisterTrustDomainParams) (*RegisterTrustDomainResult, error)
 
+	// UpdateTrustDomain updates a trust domain.
+	UpdateTrustDomain(ctx context.Context, params UpdateTrustDomainParams) (*UpdateTrustDomainResult, error)
+
 	// ListTrustDomains lists trust domains.
 	ListTrustDomains(ctx context.Context, params ListTrustDomainsParams) (*ListTrustDomainsResult, error)
 
@@ -22,6 +25,11 @@ type API interface {
 
 	// TrustDomainInfo returns trust domain information.
 	TrustDomainInfo(ctx context.Context, params TrustDomainInfoParams) (*TrustDomainInfoResult, error)
+
+	// TrustDomainSigningAuthorityStatus returns signing authority status for
+	// a trust domain. This operation contacts signer deployments and may be
+	// slow or unavailable when no signers are reachable.
+	TrustDomainSigningAuthorityStatus(ctx context.Context, params TrustDomainSigningAuthorityStatusParams) (*TrustDomainSigningAuthorityStatusResult, error)
 
 	// ListTrustDomainDeployments lists the trust domain deployments in the
 	// organization.
@@ -55,6 +63,10 @@ type CreateTrustDomainParams struct {
 
 	// Description is the trust domain description. Optional.
 	Description *string
+
+	// JwtIssuerConfig configures the JWT issuer for the trust domain. Optional.
+	// If nil, the builtin JWT issuer is used by default.
+	JwtIssuerConfig *JwtIssuerConfig
 }
 
 type CreateTrustDomainResult struct {
@@ -75,6 +87,10 @@ type RegisterTrustDomainParams struct {
 
 	// Description is the trust domain description. Optional.
 	Description *string
+
+	// JwtIssuerConfig configures the JWT issuer for the trust domain. Optional.
+	// If nil, the builtin JWT issuer is used by default.
+	JwtIssuerConfig *JwtIssuerConfig
 }
 
 type RegisterTrustDomainResult struct {
@@ -82,11 +98,24 @@ type RegisterTrustDomainResult struct {
 	ID string
 }
 
+type UpdateTrustDomainParams struct {
+	// ID is the ID of the trust domain to update. Required.
+	ID string
+
+	// JwtIssuerConfig configures the JWT issuer for the trust domain. Optional.
+	// If nil, the JWT issuer configuration for the trust domain is left unchanged.
+	JwtIssuerConfig *JwtIssuerConfig
+}
+
+type UpdateTrustDomainResult struct{}
+
 type ListTrustDomainsParams struct {
 	// Filter filters the results.
 	Filter TrustDomainFilter
 
 	// View adjusts details included in the results.
+	// When IncludeStatus is true, the control plane returns best-effort dynamic
+	// fields (cluster and federation counts, etc.); see TrustDomainStatus.
 	View TrustDomainView
 }
 
@@ -101,6 +130,94 @@ type TrustDomainInfoParams struct {
 
 type TrustDomainInfoResult struct {
 	TrustDomain TrustDomain
+}
+
+type TrustDomainSigningAuthorityStatusParams struct {
+	// ID is the ID of the trust domain. Required.
+	ID string
+}
+
+type TrustDomainSigningAuthorityStatusResult struct {
+	// SigningAuthorityStatuses contains signing key and rotation schedule
+	// information per deployment. Each deployment maintains its own
+	// cluster-local key ring state. Entries are omitted for deployments
+	// that are unreachable.
+	SigningAuthorityStatuses []SigningAuthorityStatus
+}
+
+// SigningAuthorityStatus contains metadata about a trust domain deployment's
+// signing authority, including the key rotation schedule and active signing keys.
+type SigningAuthorityStatus struct {
+	// TrustDomainDeploymentID is the ID of the deployment this status belongs to.
+	TrustDomainDeploymentID string
+
+	// TrustDomainDeploymentName is the name of the deployment this status belongs to.
+	TrustDomainDeploymentName string
+
+	// RotationSchedule describes timing of key rotations. Nil when no active
+	// key set exists (e.g. newly initialized trust domain).
+	RotationSchedule *BundleRotationSchedule
+
+	// SigningKeys is the list of active and prepared signing keys.
+	SigningKeys []SigningKey
+}
+
+// BundleRotationSchedule describes the rotation schedule for a trust domain's
+// signing authority bundle.
+type BundleRotationSchedule struct {
+	// LastRotatedAt is the time the active signing key set was created,
+	// representing the last bundle rotation event.
+	LastRotatedAt time.Time
+
+	// PreparationThreshold is how far before active key set expiry a new
+	// key set is prepared.
+	PreparationThreshold time.Duration
+
+	// ActivationThreshold is the minimum age a prepared key set must reach
+	// before it can replace the active key set.
+	ActivationThreshold time.Duration
+}
+
+// SigningKeyType distinguishes X.509 and JWT signing keys.
+type SigningKeyType int
+
+const (
+	SigningKeyTypeUnspecified SigningKeyType = iota
+	SigningKeyTypeX509
+	SigningKeyTypeJWT
+)
+
+// SigningKeyState describes the lifecycle state of a signing key.
+type SigningKeyState int
+
+const (
+	SigningKeyStateUnspecified SigningKeyState = iota
+	// SigningKeyStateActive is the currently active signing key.
+	SigningKeyStateActive
+	// SigningKeyStatePrepared has been generated and will become active
+	// at the next rotation.
+	SigningKeyStatePrepared
+	// SigningKeyStateTainted remains in the bundle but agents rotate away
+	// from SVIDs signed by this key.
+	SigningKeyStateTainted
+)
+
+// SigningKey represents a single signing key (X.509 or JWT).
+type SigningKey struct {
+	// KeyType identifies whether this is an X.509 or JWT signing key.
+	KeyType SigningKeyType
+
+	// KeyID is the key set ID for SPIRL-managed keys.
+	KeyID string
+
+	// IssuedAt is when the key was created.
+	IssuedAt time.Time
+
+	// ExpiresAt is when the key expires.
+	ExpiresAt time.Time
+
+	// State is the lifecycle state of this signing key.
+	State SigningKeyState
 }
 
 type DeleteTrustDomainParams struct {
@@ -237,9 +354,11 @@ type TrustDomain struct {
 	// or self-managed by the organization.
 	IsSelfManaged bool
 
-	// JWTIssuer is the issuer claim to include in JWT-SVIDs signed for this
-	// trust domain.
+	// Deprecated: Use JwtIssuerStatus instead.
 	JWTIssuer string
+
+	// JwtIssuerStatus contains the current JWT issuer configuration status.
+	JwtIssuerStatus *JwtIssuerStatus
 
 	// URLs contain URLs related to the trust domain.
 	URLs TrustDomainURLs
@@ -293,7 +412,9 @@ type TrustDomainStatus struct {
 	ClustersTotal int64
 
 	// ClustersActive is how many clusters in the trust domain appear to be
-	// in active use.
+	// in active use (at least one active agent heartbeat). This count can be
+	// partial when the RPC ends before every cluster is queried (for example
+	// client or server deadline).
 	ClustersActive int64
 
 	// FederationLinksTotal is how many foreign trust domains the trust domain
@@ -321,6 +442,63 @@ type TrustDomainStatus struct {
 
 	// LastExpiryIn is the duration until the last currently active certificate will expire.
 	LastExpiryIn time.Duration
+}
+
+// JwtIssuerConfig configures the JWT issuer for a trust domain.
+// The behavior depends on the combination of Set and Issuer:
+//   - Set=false: use the builtin JWT issuer (computed from the federation endpoint)
+//   - Set=true, Issuer="": disable the JWT issuer
+//   - Set=true, Issuer="https://...": use a custom JWT issuer URL
+//
+// Use the convenience constructors [JwtIssuerBuiltin], [JwtIssuerDisabled],
+// and [JwtIssuerCustom] instead of constructing this directly.
+type JwtIssuerConfig struct {
+	// Set indicates whether the issuer is explicitly configured.
+	Set bool
+
+	// Issuer is the JWT issuer URL. See JwtIssuerConfig for semantics.
+	Issuer string
+}
+
+// JwtIssuerBuiltin returns a JwtIssuerConfig that uses the builtin JWT issuer.
+func JwtIssuerBuiltin() *JwtIssuerConfig {
+	return &JwtIssuerConfig{Set: false, Issuer: ""}
+}
+
+// JwtIssuerDisabled returns a JwtIssuerConfig that disables the JWT issuer.
+func JwtIssuerDisabled() *JwtIssuerConfig {
+	return &JwtIssuerConfig{Set: true, Issuer: ""}
+}
+
+// JwtIssuerCustom returns a JwtIssuerConfig that uses a custom JWT issuer URL.
+func JwtIssuerCustom(issuer string) *JwtIssuerConfig {
+	return &JwtIssuerConfig{Set: true, Issuer: issuer}
+}
+
+// JwtIssuerMode represents the current JWT issuer configuration mode.
+type JwtIssuerMode string
+
+const (
+	// JwtIssuerModeBuiltin indicates the builtin JWT issuer is in use.
+	JwtIssuerModeBuiltin JwtIssuerMode = "builtin"
+
+	// JwtIssuerModeDisabled indicates the JWT issuer is disabled.
+	JwtIssuerModeDisabled JwtIssuerMode = "disabled"
+
+	// JwtIssuerModeCustom indicates a custom JWT issuer URL is in use.
+	JwtIssuerModeCustom JwtIssuerMode = "custom"
+)
+
+// JwtIssuerStatus represents the current JWT issuer configuration status
+// for a trust domain.
+type JwtIssuerStatus struct {
+	// Mode is the current JWT issuer configuration mode.
+	Mode JwtIssuerMode
+
+	// EffectiveIssuer is the JWT issuer URL currently in effect.
+	// It is populated when Mode is JwtIssuerModeBuiltin or JwtIssuerModeCustom,
+	// and empty when Mode is JwtIssuerModeDisabled.
+	EffectiveIssuer string
 }
 
 type TrustDomainDeploymentFilter struct {

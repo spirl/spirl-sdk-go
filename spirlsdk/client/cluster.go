@@ -2,9 +2,12 @@ package client
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"slices"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/protobuf/types/known/durationpb"
 
 	"github.com/spirl/spirl-sdk-go/spirlsdk/clustersdk"
@@ -61,20 +64,82 @@ func (a clusterAPI) CreateCluster(ctx context.Context, params clustersdk.CreateC
 }
 
 func (a clusterAPI) ListClusters(ctx context.Context, params clustersdk.ListClustersParams) (*clustersdk.ListClustersResult, error) {
-	req := &clusterapi.ListClustersRequest{
-		TrustDomainId: optionalValue(params.Filter.TrustDomainID),
-		ClusterName:   optionalValue(params.Filter.Name),
-		RealmId:       optionalValue(params.Filter.RealmID),
-	}
+	var clusters []clustersdk.ClusterItem
+	var pageToken string
 
-	resp, err := a.client.ListClusters(ctx, req)
-	if err != nil {
-		return nil, xerrors.Convert(err)
-	}
+	for {
+		req := &clusterapi.ListClustersV2Request{ //nolint: exhaustruct
+			TrustDomainId: params.Filter.TrustDomainID,
+			ClusterName:   params.Filter.Name,
+			RealmId:       params.Filter.RealmID,
+		}
+		if pageToken != "" {
+			req.PageToken = &pageToken
+		}
 
-	clusters := mapSlice(resp.Clusters, clusterFromAPI)
+		resp, err := a.client.ListClustersV2(ctx, req)
+		if err != nil {
+			return nil, xerrors.Convert(err)
+		}
+
+		clusters = append(clusters, mapSlice(resp.Clusters, clusterItemFromAPI)...)
+
+		if resp.NextPageToken == nil {
+			break
+		}
+		pageToken = resp.GetNextPageToken()
+	}
 
 	return &clustersdk.ListClustersResult{Clusters: clusters}, nil
+}
+
+func (a clusterAPI) DescribeClusters(ctx context.Context, params clustersdk.DescribeClustersParams) (*clustersdk.DescribeClustersResult, error) {
+	if len(params.IDs) < 1 {
+		return nil, errors.New("must specify at least one cluster to describe")
+	}
+
+	var ids []*clusterapi.DescribeClusterId
+	for i, id := range params.IDs {
+		if id.ClusterID != "" {
+			ids = append(ids, &clusterapi.DescribeClusterId{ //nolint: exhaustruct
+				Id: &id.ClusterID,
+			})
+			continue
+		}
+		if id.Name != "" && id.TrustDomainID != "" {
+			ids = append(ids, &clusterapi.DescribeClusterId{ //nolint: exhaustruct
+				Name:          &id.Name,
+				TrustDomainId: &id.TrustDomainID,
+			})
+			continue
+		}
+		return nil, fmt.Errorf("params.IDs[%d]: must provide either cluster ID or both name and trust domain ID to describe cluster", i)
+	}
+
+	items := make([]clustersdk.DescribeClusterItem, 0, len(ids))
+	for batch := range slices.Chunk(ids, 100) {
+		req := &clusterapi.DescribeClustersRequest{
+			Ids:              batch,
+			PerClusterErrors: true,
+		}
+		resp, err := a.client.DescribeClusters(ctx, req)
+		if err != nil {
+			return nil, xerrors.Convert(err)
+		}
+
+		if len(resp.Errors) != len(resp.Clusters) {
+			return nil, fmt.Errorf(
+				"DescribeClusters response has mismatched cluster/error lengths: %d clusters, %d errors",
+				len(resp.Clusters),
+				len(resp.Errors),
+			)
+		}
+		for i := range resp.Clusters {
+			items = append(items, describeClusterItemFromAPI(resp.Clusters[i], resp.Errors[i]))
+		}
+	}
+
+	return &clustersdk.DescribeClustersResult{Items: items}, nil
 }
 
 func (a clusterAPI) DeleteCluster(ctx context.Context, params clustersdk.DeleteClusterParams) (*clustersdk.DeleteClusterResult, error) {
@@ -229,6 +294,36 @@ func clusterFromAPI(cluster *clusterapi.Cluster) clustersdk.Cluster {
 		TrustDomainName:             cluster.TrustDomainName,
 		X509CustomizationTemplate:   cluster.X509CustomizationTemplate,
 		JWTCustomizationTemplate:    cluster.JwtCustomizationTemplate,
+	}
+}
+
+func clusterItemFromAPI(cluster *clusterapi.ClusterItem) clustersdk.ClusterItem {
+	return clustersdk.ClusterItem{
+		ID:            cluster.Id,
+		CreatedAt:     cluster.CreatedAt.AsTime(),
+		Name:          cluster.Name,
+		Description:   cluster.Description,
+		Platform:      clusterPlatformFromAPI(cluster.Platform),
+		OrgID:         cluster.OrgId,
+		TrustDomainID: cluster.TrustDomainId,
+		RealmID:       cluster.RealmId,
+	}
+}
+
+func describeClusterItemFromAPI(c *clusterapi.Cluster, e *clusterapi.DescribeClusterError) clustersdk.DescribeClusterItem {
+	if e.GetCode() != 0 {
+		return clustersdk.DescribeClusterItem{
+			Cluster: clustersdk.Cluster{}, //nolint: exhaustruct // zero value per Err semantics
+			Err: &clustersdk.DescribeClusterError{
+				Code:    codes.Code(e.GetCode()),
+				Message: e.GetMessage(),
+				Field:   e.GetField(),
+			},
+		}
+	}
+	return clustersdk.DescribeClusterItem{
+		Cluster: clusterFromAPI(c),
+		Err:     nil,
 	}
 }
 

@@ -32,7 +32,10 @@ type SetLinkParams struct {
 	Link Link
 }
 
-type SetLinkResult struct{}
+type SetLinkResult struct {
+	// ID is the unique identifier for the federation link.
+	ID string
+}
 
 type DeleteLinkParams struct {
 	// TrustDomainID identifies the trust domain with the federation link to
@@ -75,6 +78,9 @@ type LinkFilter struct {
 }
 
 type LinkStatus struct {
+	// ID is the ID of the federation link.
+	ID string
+
 	// TrustDomainID identifies the trust domain (by ID) that the federation
 	// link belongs to. Required.
 	TrustDomainID string
@@ -93,6 +99,10 @@ type LinkStatus struct {
 	// LastBundleUpdate indicates the last time the bundle for the foreign
 	// trust domain was updated.
 	LastBundleUpdate time.Time
+
+	// LastSuccessfulPoll indicates the last time the federation endpoint was
+	// polled without error.
+	LastSuccessfulPoll time.Time
 
 	// CreatedAt is the timestamp when the link was created.
 	CreatedAt time.Time

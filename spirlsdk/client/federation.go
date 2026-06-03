@@ -31,11 +31,12 @@ func (a federationAPI) SetLink(ctx context.Context, params federationsdk.SetLink
 		Link:          link,
 	}
 
-	if _, err := a.client.SetLink(ctx, req); err != nil {
+	result, err := a.client.SetLink(ctx, req)
+	if err != nil {
 		return nil, xerrors.Convert(err)
 	}
 
-	return &federationsdk.SetLinkResult{}, nil
+	return &federationsdk.SetLinkResult{ID: result.Id}, nil
 }
 
 func (a federationAPI) DeleteLink(ctx context.Context, params federationsdk.DeleteLinkParams) (*federationsdk.DeleteLinkResult, error) {
@@ -118,12 +119,14 @@ func federationLinkStatusFromAPI(in *federationapi.LinkStatus) (federationsdk.Li
 		}
 	}
 	return federationsdk.LinkStatus{
-		TrustDomainID:    in.TrustDomainId,
-		TrustDomainName:  in.TrustDomainName,
-		Link:             link,
-		LastPoll:         lastPoll,
-		LastBundleUpdate: timeFromAPI(in.LastBundleUpdate),
-		CreatedAt:        timeFromAPI(in.CreatedAt),
+		ID:                 in.Id,
+		TrustDomainID:      in.TrustDomainId,
+		TrustDomainName:    in.TrustDomainName,
+		Link:               link,
+		LastPoll:           lastPoll,
+		LastBundleUpdate:   timeFromAPI(in.LastBundleUpdate),
+		LastSuccessfulPoll: timeFromAPI(in.LastSuccessfulPoll),
+		CreatedAt:          timeFromAPI(in.CreatedAt),
 	}, nil
 }
 

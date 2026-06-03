@@ -7,10 +7,12 @@ import (
 )
 
 type config struct {
-	log           *slog.Logger
-	endpoint      string
-	endpointProxy string
-	tokenStore    auth.TokenStore
+	log                  *slog.Logger
+	endpoint             string
+	endpointProxy        string
+	tokenStore           auth.TokenStore
+	callingClient        string
+	callingClientVersion string
 }
 
 type Option = func(*config)
@@ -44,5 +46,15 @@ func WithEndpointProxy(endpointProxy string) Option {
 func WithTokenStore(tokenStore auth.TokenStore) Option {
 	return func(c *config) {
 		c.tokenStore = tokenStore
+	}
+}
+
+// WithCallingClient sets the client name and version sent in x-spirl-client and
+// x-spirl-client-version for audit log attribution. Default is "sdk" with no version.
+// For example, use WithCallingClient("terraform-provider-spirl", "1.2.3").
+func WithCallingClient(client, clientVersion string) Option {
+	return func(c *config) {
+		c.callingClient = client
+		c.callingClientVersion = clientVersion
 	}
 }

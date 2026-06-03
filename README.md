@@ -42,6 +42,10 @@ if err != nil {
 }
 ```
 
+With `TrustDomainView{IncludeStatus: true}`, each `TrustDomain.Status` includes live counts
+such as `ClustersActive` and `ClustersInconclusive`. Those values are best-effort: they can
+be partial when the RPC deadline is exceeded before every cluster is checked.
+
 The client should be closed when no longer needed:
 
 ```go

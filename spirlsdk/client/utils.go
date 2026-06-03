@@ -4,13 +4,16 @@ import (
 	"crypto/x509"
 	"time"
 
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// Optional returns a pointer to the given value. Uses &t instead of new(t)
+// because the SDK targets Go 1.25 (new(value) requires Go 1.26).
+// TODO: Can be switched to return new(t) once the SDK requires Go 1.26.
 func ptrOf[T any](t T) *T {
-	return &t
+	v := t
+	return &v
 }
 
 func optionalValue[T any](pt *T) (t T) {
@@ -32,10 +35,6 @@ func optionalValue2[T, U, V any](pt *T, f1 func(T) U, f2 func(U) V) (v V) {
 		v = f2(f1(*pt))
 	}
 	return v
-}
-
-func timeToAPI(t time.Time) *timestamppb.Timestamp {
-	return timestamppb.New(t)
 }
 
 func timeFromAPI(ts *timestamppb.Timestamp) time.Time {
@@ -92,21 +91,4 @@ func publicKeyFromAPI(d dataGetter) (any, error) {
 
 func publicKeyToAPI(d any) ([]byte, error) {
 	return x509.MarshalPKIXPublicKey(d)
-}
-
-type protoMessage[T any] interface {
-	proto.Message
-	*T
-}
-
-func messageOrNilIfEmpty[T any, M protoMessage[T]](in M) *T {
-	empty := proto.Clone(in)
-	if empty == nil {
-		return nil
-	}
-	proto.Reset(empty)
-	if proto.Equal(in, empty) {
-		return nil
-	}
-	return in
 }

@@ -36,8 +36,9 @@ func (a realmAPI) CreateRealm(ctx context.Context, params realmsdk.CreateRealmPa
 
 func (a realmAPI) ListRealms(ctx context.Context, params realmsdk.ListRealmsParams) (*realmsdk.ListRealmsResult, error) {
 	req := &realmapi.ListRealmsRequest{
-		TrustDomainId: optionalValue(params.Filter.TrustDomainID),
-		Name:          optionalValue(params.Filter.Name),
+		TrustDomainId:      optionalValue(params.Filter.TrustDomainID),
+		Name:               optionalValue(params.Filter.Name),
+		IncludeDynamicData: false,
 	}
 
 	resp, err := a.client.ListRealms(ctx, req)

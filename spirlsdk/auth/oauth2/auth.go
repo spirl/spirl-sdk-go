@@ -88,7 +88,11 @@ func (o *Auth) Authenticate(ctx context.Context, conn grpc.ClientConnInterface) 
 
 	if err := stream.Send(&sessionapi.LoginRequest{
 		Request: &sessionapi.LoginRequest_Finish{
-			Finish: &sessionapi.FinishLoginRequest{},
+			Finish: &sessionapi.FinishLoginRequest{
+				// unused in the bidirectional streaming flow;
+				// the stream identifies the session
+				LoginSessionToken: "",
+			},
 		},
 	}); err != nil {
 		return "", fmt.Errorf("failed to send finish login request: %v", err)
