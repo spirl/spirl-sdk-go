@@ -317,7 +317,7 @@ type Cluster struct {
 	// running in this cluster.
 	NumActiveAgents int64
 
-	// EstimatedLastUsed is an estimate on the the last time a SPIRL Agent
+	// EstimatedLastUsed is an estimate on the last time a SPIRL Agent
 	// belonging to this cluster was observed.
 	EstimatedLastUsed time.Time
 
@@ -402,6 +402,10 @@ type ClusterVersion struct {
 
 	// ProviderAttestationConfigName is the name of the provider attestation.
 	ProviderAttestationConfigName string
+
+	// AgentAttestationConfigID is the ID of the agent attestation
+	// configuration used by this cluster version.
+	AgentAttestationConfigID string
 
 	// EstimatedLastUsed is an estimate on the the last time a SPIRL Agent
 	// belonging to this cluster was observed.

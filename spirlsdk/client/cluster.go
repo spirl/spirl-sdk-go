@@ -347,6 +347,7 @@ func clusterVersionFromAPI(in *clusterapi.ClusterVersion) (clustersdk.ClusterVer
 		X509CustomizationTemplate:     in.X509CustomizationTemplate,
 		JWTCustomizationTemplate:      in.JwtCustomizationTemplate,
 		ProviderAttestationConfigName: in.ProviderAttestationConfigName,
+		AgentAttestationConfigID:      in.AgentAttestationConfigId,
 		EstimatedLastUsed:             in.EstimatedLastUsed.AsTime(),
 		NumActiveAgents:               in.NumActiveAgents,
 		EstimatedNumActiveWorkloads:   in.EstimatedNumActiveWorkloads,

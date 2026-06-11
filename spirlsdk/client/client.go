@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/credentials"
 
 	"github.com/spirl/spirl-sdk-go/spirlsdk/accesssdk"
+	"github.com/spirl/spirl-sdk-go/spirlsdk/agentattestationsdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/auth"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/cicdsdk"
 	"github.com/spirl/spirl-sdk-go/spirlsdk/clustersdk"
@@ -27,6 +28,7 @@ const (
 
 type Client struct {
 	access              accesssdk.API
+	agentAttestation    agentattestationsdk.API
 	cicd                cicdsdk.API
 	cluster             clustersdk.API
 	config              configsdk.API
@@ -76,6 +78,7 @@ func New(auth auth.Authenticator, opts ...Option) (*Client, error) {
 
 	return &Client{
 		access:              makeAccessAPI(conn),
+		agentAttestation:    makeAgentAttestationAPI(conn),
 		cicd:                makeCICDAPI(conn),
 		cluster:             makeClusterAPI(conn),
 		config:              makeConfigAPI(conn),
@@ -100,6 +103,11 @@ func (c *Client) Authenticate(ctx context.Context) error {
 // Access returns the Access SDK API interface.
 func (c *Client) Access() accesssdk.API {
 	return c.access
+}
+
+// AgentAttestation returns the Agent Attestation SDK API interface.
+func (c *Client) AgentAttestation() agentattestationsdk.API {
+	return c.agentAttestation
 }
 
 // ProviderAttestation returns the ProviderAttestation SDK API interface.

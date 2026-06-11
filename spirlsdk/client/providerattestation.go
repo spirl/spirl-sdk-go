@@ -109,11 +109,16 @@ func providerAttestationFromAPI(in *providerattestationapi.Config) (provideratte
 	}
 	switch v := in.Config.(type) {
 	case *providerattestationapi.Config_Aws:
+		if v.Aws == nil {
+			return providerattestationsdk.ProviderAttestation{}, xerrors.UnexpectedResponseField("config.config.aws")
+		}
 		ret.AWS = &providerattestationsdk.AWSProviderAttestationConfig{
 			RoleArn: v.Aws.RoleArn,
 		}
+	case nil:
+		return providerattestationsdk.ProviderAttestation{}, xerrors.UnexpectedResponseField("config.config")
 	default:
-		return ret, xerrors.UnexpectedResponseType("config.config", v)
+		return providerattestationsdk.ProviderAttestation{}, xerrors.UnexpectedResponseType("config.config", v)
 	}
 	return ret, nil
 }
